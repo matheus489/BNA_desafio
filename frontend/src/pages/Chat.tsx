@@ -117,19 +117,21 @@ export function Chat() {
   const containerStyles = {
     display: 'flex',
     flexDirection: 'column' as const,
-    height: 'calc(100vh - 80px)',
-    maxWidth: '1400px',
-    margin: '0 auto',
-    padding: '1rem',
-    gap: '1rem'
+    height: '100vh',
+    width: '100%',
+    padding: '2rem 3rem',
+    gap: '1.5rem',
+    background: 'transparent'
   }
 
   const headerStyles = {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     color: 'white',
-    padding: '1.5rem',
-    borderRadius: '16px',
-    boxShadow: '0 10px 25px rgba(102, 126, 234, 0.3)',
+    padding: '1.75rem 2rem',
+    borderRadius: '20px',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -138,28 +140,32 @@ export function Chat() {
   }
 
   const titleStyles = {
-    fontSize: '1.8rem',
-    fontWeight: 'bold',
+    fontSize: '2rem',
+    fontWeight: 'bold' as const,
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem',
-    margin: 0
+    gap: '0.75rem',
+    margin: 0,
+    textShadow: '0 2px 10px rgba(102, 126, 234, 0.5)'
   }
 
   const chatContainerStyles = {
     flex: 1,
-    background: 'white',
-    borderRadius: '16px',
-    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    background: 'rgba(255, 255, 255, 0.03)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '20px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
     display: 'flex',
     flexDirection: 'column' as const,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    minHeight: 0
   }
 
   const messagesAreaStyles = {
     flex: 1,
     overflowY: 'auto' as const,
-    padding: '2rem',
+    padding: '2.5rem',
     display: 'flex',
     flexDirection: 'column' as const,
     gap: '1.5rem'
@@ -168,43 +174,53 @@ export function Chat() {
   const messageStyles = (isUser: boolean) => ({
     display: 'flex',
     justifyContent: isUser ? 'flex-end' : 'flex-start',
-    animation: 'fadeIn 0.3s ease-in'
+    animation: 'fadeIn 0.4s ease-out'
   })
 
   const messageBubbleStyles = (isUser: boolean) => ({
-    maxWidth: '70%',
-    padding: '1rem 1.5rem',
-    borderRadius: isUser ? '20px 20px 0 20px' : '20px 20px 20px 0',
+    maxWidth: '75%',
+    padding: '1.25rem 1.75rem',
+    borderRadius: isUser ? '24px 24px 4px 24px' : '24px 24px 24px 4px',
     background: isUser 
-      ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-      : '#f7fafc',
-    color: isUser ? 'white' : '#2d3748',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%)'
+      : 'rgba(255, 255, 255, 0.08)',
+    backdropFilter: 'blur(10px)',
+    border: `1px solid ${isUser ? 'rgba(102, 126, 234, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
+    color: 'white',
+    boxShadow: isUser 
+      ? '0 8px 32px rgba(102, 126, 234, 0.3)' 
+      : '0 8px 32px rgba(0, 0, 0, 0.2)',
     lineHeight: '1.6',
     whiteSpace: 'pre-wrap' as const,
-    wordBreak: 'break-word' as const
+    wordBreak: 'break-word' as const,
+    fontSize: '0.98rem'
   })
 
   const sourcesContainerStyles = (isUser: boolean) => ({
     marginTop: '1rem',
-    padding: '1rem',
-    background: isUser ? 'rgba(255, 255, 255, 0.1)' : '#edf2f7',
-    borderRadius: '12px',
+    padding: '1.25rem',
+    background: isUser ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: '16px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     fontSize: '0.9rem'
   })
 
   const sourceItemStyles = {
-    marginBottom: '0.5rem',
-    padding: '0.5rem',
-    background: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: '8px',
-    borderLeft: '3px solid #667eea'
+    marginBottom: '0.75rem',
+    padding: '1rem',
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    borderRadius: '12px',
+    borderLeft: '3px solid rgba(102, 126, 234, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.1)'
   }
 
   const inputContainerStyles = {
-    padding: '1.5rem',
-    borderTop: '1px solid #e2e8f0',
-    background: '#f8f9fa'
+    padding: '2rem',
+    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+    background: 'rgba(15, 23, 42, 0.5)',
+    backdropFilter: 'blur(20px)'
   }
 
   const inputRowStyles = {
@@ -215,70 +231,80 @@ export function Chat() {
 
   const inputStyles = {
     flex: 1,
-    padding: '1rem',
-    border: '2px solid #e1e5e9',
-    borderRadius: '12px',
+    padding: '1.25rem',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '16px',
     fontSize: '1rem',
     outline: 'none',
-    transition: 'all 0.3s ease'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    color: 'white'
   }
 
   const buttonStyles = {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%)',
     color: 'white',
-    border: 'none',
-    padding: '1rem 2rem',
-    borderRadius: '12px',
+    border: '1px solid rgba(102, 126, 234, 0.3)',
+    padding: '1.25rem 2.5rem',
+    borderRadius: '16px',
     fontSize: '1rem',
-    fontWeight: '600',
+    fontWeight: '600' as const,
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-    minWidth: '120px'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    boxShadow: '0 8px 32px rgba(102, 126, 234, 0.4)',
+    minWidth: '140px',
+    backdropFilter: 'blur(10px)'
   }
 
   const toggleStyles = {
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem',
-    fontSize: '0.9rem',
-    color: '#4a5568'
+    gap: '0.75rem',
+    fontSize: '0.95rem',
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginBottom: '0.5rem'
   }
 
   const clearButtonStyles = {
-    background: 'rgba(255, 255, 255, 0.2)',
+    background: 'rgba(239, 68, 68, 0.2)',
     color: 'white',
-    border: '2px solid white',
-    padding: '0.5rem 1rem',
-    borderRadius: '8px',
-    fontSize: '0.9rem',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+    padding: '0.75rem 1.5rem',
+    borderRadius: '12px',
+    fontSize: '0.95rem',
     cursor: 'pointer',
-    transition: 'all 0.3s ease'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    backdropFilter: 'blur(10px)'
   }
 
   const emptyStateStyles = {
     textAlign: 'center' as const,
     padding: '4rem 2rem',
-    color: '#a0aec0'
+    color: 'rgba(255, 255, 255, 0.6)'
   }
 
   const badgeStyles = (type: string) => ({
     display: 'inline-block',
-    padding: '0.25rem 0.75rem',
-    borderRadius: '12px',
+    padding: '0.375rem 0.875rem',
+    borderRadius: '20px',
     fontSize: '0.8rem',
-    fontWeight: '600',
-    marginRight: '0.5rem',
-    background: type === 'database' ? '#667eea' : '#48bb78',
-    color: 'white'
+    fontWeight: '600' as const,
+    marginRight: '0.75rem',
+    background: type === 'database' 
+      ? 'linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%)'
+      : 'linear-gradient(135deg, rgba(72, 187, 120, 0.8) 0%, rgba(56, 161, 105, 0.8) 100%)',
+    color: 'white',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.2)'
   })
 
   if (loadingHistory) {
     return (
       <div style={containerStyles}>
         <div style={emptyStateStyles}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⏳</div>
-          <p>Carregando histórico...</p>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem', filter: 'grayscale(0.5)' }}>⏳</div>
+          <p style={{ fontSize: '1.2rem', color: 'rgba(255, 255, 255, 0.7)' }}>Carregando histórico...</p>
         </div>
       </div>
     )
@@ -294,8 +320,16 @@ export function Chat() {
         <button 
           style={clearButtonStyles}
           onClick={clearHistory}
-          onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.3)'}
-          onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
+          onMouseOver={(e) => {
+            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.3)'
+            e.currentTarget.style.transform = 'translateY(-2px)'
+            e.currentTarget.style.boxShadow = '0 12px 32px rgba(239, 68, 68, 0.4)'
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'
+            e.currentTarget.style.transform = 'translateY(0)'
+            e.currentTarget.style.boxShadow = 'none'
+          }}
         >
           🗑️ Limpar Histórico
         </button>
@@ -307,19 +341,19 @@ export function Chat() {
         <div style={messagesAreaStyles}>
           {messages.length === 0 ? (
             <div style={emptyStateStyles}>
-              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>💬</div>
-              <h3 style={{ color: '#4a5568', marginBottom: '0.5rem' }}>
+              <div style={{ fontSize: '5rem', marginBottom: '1.5rem', filter: 'grayscale(0.3)' }}>💬</div>
+              <h3 style={{ color: 'rgba(255, 255, 255, 0.9)', marginBottom: '1rem', fontSize: '1.8rem', fontWeight: '600' }}>
                 Bem-vindo ao Chat RAG!
               </h3>
-              <p style={{ maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>
+              <p style={{ maxWidth: '700px', margin: '0 auto', lineHeight: '1.8', fontSize: '1.05rem', color: 'rgba(255, 255, 255, 0.7)' }}>
                 Faça perguntas sobre as empresas analisadas ou qualquer informação de vendas.
                 <br />
                 O sistema busca automaticamente no banco de dados e na internet para te dar as melhores respostas!
               </p>
-              <div style={{ marginTop: '2rem', color: '#718096' }}>
-                <p><strong>Exemplos de perguntas:</strong></p>
-                <p>• "Qual o stack tecnológico da empresa X?"</p>
-                <p>• "Quais empresas de IA já analisei?"</p>
+              <div style={{ marginTop: '2.5rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                <p style={{ fontWeight: '600', fontSize: '1.1rem', marginBottom: '1rem' }}>Exemplos de perguntas:</p>
+                <p style={{ marginBottom: '0.5rem' }}>• "Qual o stack tecnológico da empresa X?"</p>
+                <p style={{ marginBottom: '0.5rem' }}>• "Quais empresas de IA já analisei?"</p>
                 <p>• "Me dê informações sobre pricing de SaaS B2B"</p>
               </div>
             </div>
@@ -334,8 +368,8 @@ export function Chat() {
                   {/* Sources */}
                   {msg.sources && msg.sources.length > 0 && (
                     <div style={sourcesContainerStyles(msg.role === 'user')}>
-                      <strong>📚 Fontes consultadas:</strong>
-                      <div style={{ marginTop: '0.5rem' }}>
+                      <strong style={{ color: 'rgba(255, 255, 255, 0.9)' }}>📚 Fontes consultadas:</strong>
+                      <div style={{ marginTop: '1rem' }}>
                         {msg.sources.map((source, idx) => (
                           <div key={idx} style={sourceItemStyles}>
                             <span style={badgeStyles(source.type)}>
@@ -346,20 +380,22 @@ export function Chat() {
                               target="_blank" 
                               rel="noreferrer"
                               style={{ 
-                                color: '#667eea', 
+                                color: 'rgba(102, 126, 234, 1)', 
                                 textDecoration: 'none',
-                                fontWeight: '500'
+                                fontWeight: '500',
+                                fontSize: '0.95rem'
                               }}
                             >
                               {source.title}
                             </a>
                             {source.snippet && (
                               <div style={{ 
-                                marginTop: '0.25rem', 
-                                fontSize: '0.85rem',
-                                color: '#718096'
+                                marginTop: '0.5rem', 
+                                fontSize: '0.88rem',
+                                color: 'rgba(255, 255, 255, 0.6)',
+                                lineHeight: '1.5'
                               }}>
-                                {source.snippet.substring(0, 100)}...
+                                {source.snippet.substring(0, 150)}...
                               </div>
                             )}
                           </div>
@@ -376,13 +412,13 @@ export function Chat() {
           {loading && (
             <div style={messageStyles(false)}>
               <div style={messageBubbleStyles(false)}>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                   <div className="typing-indicator">
                     <span></span>
                     <span></span>
                     <span></span>
                   </div>
-                  Processando... (RAG + Web Search)
+                  <span style={{ color: 'rgba(255, 255, 255, 0.8)' }}>Processando... (RAG + Web Search)</span>
                 </div>
               </div>
             </div>
@@ -398,9 +434,9 @@ export function Chat() {
               type="checkbox" 
               checked={useWebSearch} 
               onChange={(e) => setUseWebSearch(e.target.checked)}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', width: '18px', height: '18px' }}
             />
-            <label>
+            <label style={{ fontSize: '0.95rem', userSelect: 'none' }}>
               🌐 Ativar busca automática na internet (recomendado)
             </label>
           </div>
@@ -413,18 +449,24 @@ export function Chat() {
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
               disabled={loading}
-              onFocus={(e) => e.target.style.borderColor = '#667eea'}
-              onBlur={(e) => e.target.style.borderColor = '#e1e5e9'}
+              onFocus={(e) => {
+                e.target.style.borderColor = 'rgba(102, 126, 234, 0.6)'
+                e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.2)'
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)'
+                e.target.style.boxShadow = 'none'
+              }}
             />
             <button
               style={{
                 ...buttonStyles,
-                opacity: (!input.trim() || loading) ? 0.6 : 1,
+                opacity: (!input.trim() || loading) ? 0.5 : 1,
                 cursor: (!input.trim() || loading) ? 'not-allowed' : 'pointer'
               }}
               onClick={sendMessage}
               disabled={!input.trim() || loading}
-              onMouseOver={(e) => !loading && input.trim() && (e.currentTarget.style.transform = 'translateY(-2px)')}
+              onMouseOver={(e) => !loading && input.trim() && (e.currentTarget.style.transform = 'translateY(-3px)')}
               onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
               {loading ? '⏳ Enviando...' : '🚀 Enviar'}
@@ -435,19 +477,19 @@ export function Chat() {
 
       <style>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
+          from { opacity: 0; transform: translateY(15px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
         .typing-indicator {
           display: flex;
-          gap: 4px;
+          gap: 5px;
         }
 
         .typing-indicator span {
-          width: 8px;
-          height: 8px;
-          background: #667eea;
+          width: 9px;
+          height: 9px;
+          background: rgba(102, 126, 234, 0.9);
           border-radius: 50%;
           animation: typing 1.4s infinite;
         }
@@ -461,11 +503,34 @@ export function Chat() {
         }
 
         @keyframes typing {
-          0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
-          30% { transform: translateY(-10px); opacity: 1; }
+          0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+          30% { transform: translateY(-12px); opacity: 1; }
+        }
+
+        input::placeholder {
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: rgba(102, 126, 234, 0.4);
+          border-radius: 10px;
+          border: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(102, 126, 234, 0.6);
         }
       `}</style>
     </div>
   )
 }
-

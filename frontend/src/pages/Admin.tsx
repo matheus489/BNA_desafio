@@ -43,160 +43,172 @@ export function Admin() {
 
   // Estilos modernos
   const containerStyles = {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '2rem'
+    width: '100%',
+    minHeight: 'calc(100vh - 100px)',
+    padding: '3rem',
+    color: 'white'
   }
 
   const cardStyles = {
-    background: 'white',
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(20px)',
     borderRadius: '20px',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-    padding: '2rem',
-    marginBottom: '2rem',
-    border: '1px solid rgba(102, 126, 234, 0.1)'
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+    padding: '2.5rem',
+    marginBottom: '2.5rem'
   }
 
   const titleStyles = {
-    fontSize: '2rem',
-    fontWeight: 'bold',
+    fontSize: '2.5rem',
+    fontWeight: 'bold' as const,
+    marginBottom: '2rem',
+    color: 'white',
+    textShadow: '0 2px 10px rgba(102, 126, 234, 0.5)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem'
+  }
+
+  const sectionTitleStyles = {
+    fontSize: '1.6rem',
+    fontWeight: '600' as const,
     marginBottom: '1.5rem',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
+    color: 'rgba(255, 255, 255, 0.95)',
     display: 'flex',
     alignItems: 'center',
     gap: '0.75rem'
   }
 
-  const sectionTitleStyles = {
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    marginBottom: '1rem',
-    color: '#2d3748',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem'
-  }
-
   const tableStyles = {
     width: '100%',
     borderCollapse: 'collapse' as const,
-    background: 'white',
-    borderRadius: '12px',
+    background: 'rgba(255, 255, 255, 0.03)',
+    borderRadius: '16px',
     overflow: 'hidden',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)'
+    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)'
   }
 
   const headerStyles = {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.4) 100%)',
+    backdropFilter: 'blur(10px)',
     color: 'white',
-    padding: '1rem',
+    padding: '1.25rem',
     textAlign: 'left' as const,
-    fontWeight: '600',
-    fontSize: '0.9rem'
+    fontWeight: '600' as const,
+    fontSize: '0.95rem',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
   }
 
   const rowStyles = {
-    borderBottom: '1px solid #f0f0f0',
-    transition: 'all 0.3s ease'
+    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
   }
 
   const cellStyles = {
-    padding: '1rem',
-    verticalAlign: 'top' as const,
-    color: '#2d3748'
+    padding: '1.25rem',
+    verticalAlign: 'middle' as const,
+    color: 'rgba(255, 255, 255, 0.9)'
   }
 
   const buttonStyles = {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.6) 0%, rgba(118, 75, 162, 0.6) 100%)',
     color: 'white',
-    border: 'none',
-    padding: '0.5rem 1rem',
-    borderRadius: '8px',
-    fontSize: '0.8rem',
-    fontWeight: '500',
+    border: '1px solid rgba(102, 126, 234, 0.3)',
+    padding: '0.625rem 1.25rem',
+    borderRadius: '10px',
+    fontSize: '0.85rem',
+    fontWeight: '500' as const,
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    marginRight: '0.5rem',
-    boxShadow: '0 2px 4px rgba(102, 126, 234, 0.3)'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    marginRight: '0.75rem',
+    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+    backdropFilter: 'blur(10px)'
   }
 
   const userButtonStyles = {
-    background: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+    background: 'linear-gradient(135deg, rgba(72, 187, 120, 0.6) 0%, rgba(56, 161, 105, 0.6) 100%)',
     color: 'white',
-    border: 'none',
-    padding: '0.5rem 1rem',
-    borderRadius: '8px',
-    fontSize: '0.8rem',
-    fontWeight: '500',
+    border: '1px solid rgba(72, 187, 120, 0.3)',
+    padding: '0.625rem 1.25rem',
+    borderRadius: '10px',
+    fontSize: '0.85rem',
+    fontWeight: '500' as const,
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    marginRight: '0.5rem',
-    boxShadow: '0 2px 4px rgba(72, 187, 120, 0.3)'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    marginRight: '0.75rem',
+    boxShadow: '0 4px 15px rgba(72, 187, 120, 0.3)',
+    backdropFilter: 'blur(10px)'
   }
 
   const adminButtonStyles = {
-    background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
+    background: 'linear-gradient(135deg, rgba(237, 137, 54, 0.6) 0%, rgba(221, 107, 32, 0.6) 100%)',
     color: 'white',
-    border: 'none',
-    padding: '0.5rem 1rem',
-    borderRadius: '8px',
-    fontSize: '0.8rem',
-    fontWeight: '500',
+    border: '1px solid rgba(237, 137, 54, 0.3)',
+    padding: '0.625rem 1.25rem',
+    borderRadius: '10px',
+    fontSize: '0.85rem',
+    fontWeight: '500' as const,
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    marginRight: '0.5rem',
-    boxShadow: '0 2px 4px rgba(237, 137, 54, 0.3)'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    marginRight: '0.75rem',
+    boxShadow: '0 4px 15px rgba(237, 137, 54, 0.3)',
+    backdropFilter: 'blur(10px)'
   }
 
   const urlStyles = {
-    color: '#667eea',
+    color: 'rgba(102, 126, 234, 1)',
     textDecoration: 'none',
-    fontWeight: '500',
-    wordBreak: 'break-all' as const
+    fontWeight: '500' as const,
+    wordBreak: 'break-all' as const,
+    transition: 'color 0.3s ease'
   }
 
   const summaryStyles = {
-    maxWidth: '300px',
+    maxWidth: '400px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap' as const,
-    color: '#4a5568'
+    color: 'rgba(255, 255, 255, 0.7)'
   }
 
   const dateStyles = {
-    color: '#6b7280',
+    color: 'rgba(255, 255, 255, 0.6)',
     fontSize: '0.9rem'
   }
 
   const errorStyles = {
-    background: '#fed7d7',
-    color: '#c53030',
-    padding: '1rem',
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+    color: 'rgba(254, 202, 202, 1)',
+    padding: '1.25rem',
     borderRadius: '12px',
-    border: '1px solid #feb2b2',
-    marginBottom: '1rem',
-    fontSize: '0.9rem'
+    marginBottom: '1.5rem',
+    fontSize: '0.95rem',
+    backdropFilter: 'blur(10px)'
   }
 
   const loadingStyles = {
     textAlign: 'center' as const,
-    padding: '3rem',
-    color: '#6b7280',
-    fontSize: '1.1rem'
+    padding: '4rem',
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: '1.2rem'
   }
 
   const roleBadgeStyles = (role: string) => ({
     background: role === 'admin' 
-      ? 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)' 
-      : 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+      ? 'linear-gradient(135deg, rgba(237, 137, 54, 0.8) 0%, rgba(221, 107, 32, 0.8) 100%)' 
+      : 'linear-gradient(135deg, rgba(72, 187, 120, 0.8) 0%, rgba(56, 161, 105, 0.8) 100%)',
     color: 'white',
-    padding: '0.25rem 0.75rem',
+    padding: '0.375rem 1rem',
     borderRadius: '20px',
-    fontSize: '0.8rem',
-    fontWeight: '500',
-    display: 'inline-block'
+    fontSize: '0.85rem',
+    fontWeight: '500' as const,
+    display: 'inline-block',
+    border: `1px solid ${role === 'admin' ? 'rgba(237, 137, 54, 0.3)' : 'rgba(72, 187, 120, 0.3)'}`,
+    backdropFilter: 'blur(10px)'
   })
 
   if (loading) {
@@ -220,7 +232,7 @@ export function Admin() {
         
         {error && <div style={errorStyles}>❌ {error}</div>}
         
-        <div style={{ marginBottom: '2rem' }}>
+        <div style={{ marginBottom: '3rem' }}>
           <h3 style={sectionTitleStyles}>
             👥 Usuários ({users.length})
           </h3>
@@ -239,12 +251,18 @@ export function Admin() {
                   <tr 
                     key={u.id} 
                     style={rowStyles}
-                    onMouseOver={(e) => (e.target as HTMLElement).style.background = '#f8f9fa'}
-                    onMouseOut={(e) => (e.target as HTMLElement).style.background = 'white'}
+                    onMouseOver={(e) => {
+                      const row = e.currentTarget
+                      row.style.background = 'rgba(102, 126, 234, 0.1)'
+                    }}
+                    onMouseOut={(e) => {
+                      const row = e.currentTarget
+                      row.style.background = 'transparent'
+                    }}
                   >
                     <td style={cellStyles}>{u.id}</td>
                     <td style={cellStyles}>
-                      <div style={{ fontWeight: '500', color: '#2d3748' }}>
+                      <div style={{ fontWeight: '500', color: 'rgba(255, 255, 255, 0.95)' }}>
                         {u.email}
                       </div>
                     </td>
@@ -257,16 +275,28 @@ export function Admin() {
                       <button 
                         style={userButtonStyles}
                         onClick={() => changeRole(u.id, 'user')}
-                        onMouseOver={(e) => (e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'}
-                        onMouseOut={(e) => (e.target as HTMLButtonElement).style.transform = 'translateY(0)'}
+                        onMouseOver={(e) => {
+                          (e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'
+                          ;(e.target as HTMLButtonElement).style.boxShadow = '0 6px 20px rgba(72, 187, 120, 0.5)'
+                        }}
+                        onMouseOut={(e) => {
+                          (e.target as HTMLButtonElement).style.transform = 'translateY(0)'
+                          ;(e.target as HTMLButtonElement).style.boxShadow = '0 4px 15px rgba(72, 187, 120, 0.3)'
+                        }}
                       >
                         👤 User
                       </button>
                       <button 
                         style={adminButtonStyles}
                         onClick={() => changeRole(u.id, 'admin')}
-                        onMouseOver={(e) => (e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'}
-                        onMouseOut={(e) => (e.target as HTMLButtonElement).style.transform = 'translateY(0)'}
+                        onMouseOver={(e) => {
+                          (e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'
+                          ;(e.target as HTMLButtonElement).style.boxShadow = '0 6px 20px rgba(237, 137, 54, 0.5)'
+                        }}
+                        onMouseOut={(e) => {
+                          (e.target as HTMLButtonElement).style.transform = 'translateY(0)'
+                          ;(e.target as HTMLButtonElement).style.boxShadow = '0 4px 15px rgba(237, 137, 54, 0.3)'
+                        }}
                       >
                         👑 Admin
                       </button>
@@ -298,8 +328,14 @@ export function Admin() {
                   <tr 
                     key={it.id}
                     style={rowStyles}
-                    onMouseOver={(e) => (e.target as HTMLElement).style.background = '#f8f9fa'}
-                    onMouseOut={(e) => (e.target as HTMLElement).style.background = 'white'}
+                    onMouseOver={(e) => {
+                      const row = e.currentTarget
+                      row.style.background = 'rgba(102, 126, 234, 0.1)'
+                    }}
+                    onMouseOut={(e) => {
+                      const row = e.currentTarget
+                      row.style.background = 'transparent'
+                    }}
                   >
                     <td style={cellStyles}>{it.id}</td>
                     <td style={cellStyles}>
@@ -308,12 +344,14 @@ export function Admin() {
                         target="_blank" 
                         rel="noreferrer"
                         style={urlStyles}
+                        onMouseOver={(e) => (e.target as HTMLAnchorElement).style.color = 'rgba(118, 75, 162, 1)'}
+                        onMouseOut={(e) => (e.target as HTMLAnchorElement).style.color = 'rgba(102, 126, 234, 1)'}
                       >
                         {it.url}
                       </a>
                     </td>
                     <td style={cellStyles}>
-                      <div style={{ fontWeight: '500', color: '#2d3748' }}>
+                      <div style={{ fontWeight: '500', color: 'rgba(255, 255, 255, 0.95)' }}>
                         {it.title}
                       </div>
                     </td>
@@ -334,8 +372,29 @@ export function Admin() {
           </div>
         </div>
       </div>
+
+      <style>{`
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: rgba(102, 126, 234, 0.4);
+          border-radius: 10px;
+          border: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(102, 126, 234, 0.6);
+        }
+      `}</style>
     </div>
   )
 }
-
-

@@ -39,116 +39,128 @@ export function Login() {
 
   const containerStyles = {
     minHeight: '100vh',
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '2rem'
+    padding: '2rem',
+    background: 'transparent'
   }
 
   const cardStyles = {
-    background: 'white',
-    borderRadius: '20px',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-    padding: '3rem',
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(30px)',
+    borderRadius: '24px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    boxShadow: '0 30px 80px rgba(0, 0, 0, 0.4)',
+    padding: '3.5rem',
     width: '100%',
-    maxWidth: '400px',
-    textAlign: 'center' as const
+    maxWidth: '480px',
+    textAlign: 'center' as const,
+    color: 'white'
   }
 
-         const titleStyles = {
-           fontSize: '2rem',
-           fontWeight: 'bold',
-           marginBottom: '1rem',
-           display: 'flex',
-           alignItems: 'center',
-           justifyContent: 'center'
-         }
+  const titleStyles = {
+    fontSize: '2rem',
+    fontWeight: 'bold' as const,
+    marginBottom: '2rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 
-         const logoImageStyles = {
-           height: '80px',
-           width: 'auto',
-           filter: 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)', // Aplica o gradiente ao logo
-           transition: 'all 0.3s ease'
-         }
+  const logoImageStyles = {
+    height: '90px',
+    width: 'auto',
+    filter: 'brightness(0) invert(1)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    marginBottom: '1rem'
+  }
 
   const subtitleStyles = {
-    color: '#6b7280',
-    marginBottom: '2rem',
-    fontSize: '1rem'
+    color: 'rgba(255, 255, 255, 0.7)',
+    marginBottom: '2.5rem',
+    fontSize: '1.05rem',
+    lineHeight: '1.6'
   }
 
-         const inputStyles = {
-           width: '100%',
-           padding: '1rem',
-           border: '2px solid #e5e7eb',
-           borderRadius: '12px',
-           fontSize: '1rem',
-           outline: 'none',
-           transition: 'all 0.3s ease',
-           background: '#f9fafb',
-           marginBottom: '1rem',
-           minHeight: '48px',
-           boxSizing: 'border-box' as const
-         }
+  const inputStyles = {
+    width: '100%',
+    padding: '1.25rem',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '14px',
+    fontSize: '1rem',
+    outline: 'none',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    color: 'white',
+    marginBottom: '1rem',
+    minHeight: '52px',
+    boxSizing: 'border-box' as const
+  }
 
-         const buttonStyles = {
-           width: '100%',
-           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-           color: 'white',
-           border: 'none',
-           padding: '1rem',
-           borderRadius: '12px',
-           fontSize: '1rem',
-           fontWeight: '600',
-           cursor: 'pointer',
-           transition: 'all 0.3s ease',
-           boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-           marginBottom: '1rem',
-           minHeight: '48px',
-           display: 'flex',
-           alignItems: 'center',
-           justifyContent: 'center'
-         }
+  const buttonStyles = {
+    width: '100%',
+    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%)',
+    color: 'white',
+    border: '1px solid rgba(102, 126, 234, 0.3)',
+    padding: '1.25rem',
+    borderRadius: '14px',
+    fontSize: '1.05rem',
+    fontWeight: '600' as const,
+    cursor: 'pointer',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    boxShadow: '0 10px 40px rgba(102, 126, 234, 0.4)',
+    marginBottom: '1rem',
+    minHeight: '52px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backdropFilter: 'blur(10px)'
+  }
 
-         const toggleButtonStyles = {
-           background: 'transparent',
-           color: '#667eea',
-           border: '2px solid #667eea',
-           padding: '1rem',
-           borderRadius: '12px',
-           fontSize: '1rem',
-           fontWeight: '500',
-           cursor: 'pointer',
-           transition: 'all 0.3s ease',
-           width: '100%',
-           minHeight: '48px',
-           display: 'flex',
-           alignItems: 'center',
-           justifyContent: 'center'
-         }
+  const toggleButtonStyles = {
+    background: 'rgba(255, 255, 255, 0.05)',
+    color: 'rgba(255, 255, 255, 0.9)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    padding: '1.25rem',
+    borderRadius: '14px',
+    fontSize: '1rem',
+    fontWeight: '500' as const,
+    cursor: 'pointer',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    width: '100%',
+    minHeight: '52px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backdropFilter: 'blur(10px)'
+  }
 
   const errorStyles = {
-    background: '#fed7d7',
-    color: '#c53030',
-    padding: '1rem',
-    borderRadius: '8px',
-    border: '1px solid #feb2b2',
-    marginTop: '1rem',
-    fontSize: '0.9rem'
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+    color: 'rgba(254, 202, 202, 1)',
+    padding: '1.25rem',
+    borderRadius: '12px',
+    marginTop: '1.25rem',
+    fontSize: '0.95rem',
+    backdropFilter: 'blur(10px)'
   }
 
   return (
     <div style={containerStyles}>
       <div style={cardStyles}>
-               <div style={titleStyles}>
-                 <img 
-                   src="https://www.bna.dev.br/assets/bnadev_logo-Cb23hnmr.svg" 
-                   alt="BNA Logo" 
-                   style={logoImageStyles}
-                   onMouseOver={(e) => (e.target as HTMLImageElement).style.transform = 'scale(1.05)'}
-                   onMouseOut={(e) => (e.target as HTMLImageElement).style.transform = 'scale(1)'}
-                 />
-               </div>
+        <div style={titleStyles}>
+          <img 
+            src="https://www.bna.dev.br/assets/bnadev_logo-Cb23hnmr.svg" 
+            alt="BNA Logo" 
+            style={logoImageStyles}
+            onMouseOver={(e) => (e.target as HTMLImageElement).style.transform = 'scale(1.08) rotate(2deg)'}
+            onMouseOut={(e) => (e.target as HTMLImageElement).style.transform = 'scale(1) rotate(0deg)'}
+          />
+        </div>
         <p style={subtitleStyles}>
           {isRegister ? 'Crie sua conta para começar' : 'Faça login para continuar'}
         </p>
@@ -160,8 +172,14 @@ export function Login() {
             type="email"
             value={email} 
             onChange={e => setEmail(e.target.value)}
-            onFocus={(e) => e.target.style.borderColor = '#667eea'}
-            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+            onFocus={(e) => {
+              e.target.style.borderColor = 'rgba(102, 126, 234, 0.6)'
+              e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.2)'
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)'
+              e.target.style.boxShadow = 'none'
+            }}
             required
           />
           <input 
@@ -170,20 +188,26 @@ export function Login() {
             type="password"
             value={password} 
             onChange={e => setPassword(e.target.value)}
-            onFocus={(e) => e.target.style.borderColor = '#667eea'}
-            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+            onFocus={(e) => {
+              e.target.style.borderColor = 'rgba(102, 126, 234, 0.6)'
+              e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.2)'
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.15)'
+              e.target.style.boxShadow = 'none'
+            }}
             required
           />
           <button 
             type="submit" 
             style={{
               ...buttonStyles,
-              opacity: loading ? 0.7 : 1,
+              opacity: loading ? 0.6 : 1,
               cursor: loading ? 'not-allowed' : 'pointer'
             }}
             disabled={loading}
-            onMouseOver={(e) => !loading && (e.target.style.transform = 'translateY(-2px)')}
-            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            onMouseOver={(e) => !loading && ((e.target as HTMLButtonElement).style.transform = 'translateY(-3px)')}
+            onMouseOut={(e) => (e.target as HTMLButtonElement).style.transform = 'translateY(0)'}
           >
             {loading ? '⏳ Processando...' : (isRegister ? '✨ Criar Conta' : '🔑 Entrar')}
           </button>
@@ -194,12 +218,14 @@ export function Login() {
           style={toggleButtonStyles}
           onClick={() => setIsRegister(v => !v)}
           onMouseOver={(e) => {
-            (e.target as HTMLButtonElement).style.background = '#667eea'
-            ;(e.target as HTMLButtonElement).style.color = 'white'
+            (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.2)'
+            ;(e.target as HTMLButtonElement).style.borderColor = 'rgba(102, 126, 234, 0.4)'
+            ;(e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'
           }}
           onMouseOut={(e) => {
-            (e.target as HTMLButtonElement).style.background = 'transparent'
-            ;(e.target as HTMLButtonElement).style.color = '#667eea'
+            (e.target as HTMLButtonElement).style.background = 'rgba(255, 255, 255, 0.05)'
+            ;(e.target as HTMLButtonElement).style.borderColor = 'rgba(255, 255, 255, 0.15)'
+            ;(e.target as HTMLButtonElement).style.transform = 'translateY(0)'
           }}
         >
           {isRegister ? '👤 Já tenho uma conta' : '✨ Criar nova conta'}
@@ -207,8 +233,20 @@ export function Login() {
 
         {error && <div style={errorStyles}>❌ {error}</div>}
       </div>
+
+      <style>{`
+        input::placeholder {
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+          -webkit-text-fill-color: white;
+          -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset;
+          transition: background-color 5000s ease-in-out 0s;
+        }
+      `}</style>
     </div>
   )
 }
-
-

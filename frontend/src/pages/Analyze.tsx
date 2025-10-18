@@ -30,123 +30,107 @@ export function Analyze() {
   }
 
   const containerStyles = {
-    maxWidth: '900px',
-    margin: '0 auto',
-    padding: '2rem'
+    width: '100%',
+    minHeight: 'calc(100vh - 100px)',
+    padding: '3rem',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '2rem'
   }
 
   const cardStyles = {
-    background: 'white',
-    borderRadius: '16px',
-    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-    padding: '2rem',
-    marginBottom: '2rem'
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '20px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+    padding: '2.5rem',
+    color: 'white'
   }
 
   const inputStyles = {
     width: '100%',
-    padding: '1rem',
-    border: '2px solid #e1e5e9',
-    borderRadius: '12px',
+    padding: '1.25rem',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '16px',
     fontSize: '1rem',
     outline: 'none',
-    transition: 'all 0.3s ease',
-    background: '#f8f9fa'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    color: 'white'
   }
 
   const buttonStyles = {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%)',
     color: 'white',
-    border: 'none',
-    padding: '1rem 2rem',
-    borderRadius: '12px',
+    border: '1px solid rgba(102, 126, 234, 0.3)',
+    padding: '1.25rem 2.5rem',
+    borderRadius: '16px',
     fontSize: '1rem',
-    fontWeight: '600',
+    fontWeight: '600' as const,
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-    minWidth: '140px'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    boxShadow: '0 8px 32px rgba(102, 126, 234, 0.4)',
+    minWidth: '160px',
+    backdropFilter: 'blur(10px)'
   }
 
   const resultCardStyles = {
-    background: 'white',
-    borderRadius: '16px',
-    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
-    padding: '2rem',
-    marginTop: '2rem'
+    background: 'rgba(255, 255, 255, 0.03)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: '20px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+    padding: '2.5rem',
+    marginTop: '2rem',
+    color: 'white'
   }
 
   const sectionStyles = {
-    marginBottom: '1.5rem',
-    paddingBottom: '1.5rem',
-    borderBottom: '1px solid #f0f0f0'
+    marginBottom: '2rem',
+    paddingBottom: '2rem',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
   }
 
   const titleStyles = {
-    color: '#2d3748',
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    marginBottom: '1rem',
+    color: 'white',
+    fontSize: '2rem',
+    fontWeight: 'bold' as const,
+    marginBottom: '2rem',
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem'
+    gap: '0.75rem',
+    textShadow: '0 2px 10px rgba(102, 126, 234, 0.5)'
   }
 
   const labelStyles = {
-    color: '#4a5568',
-    fontWeight: '600',
-    fontSize: '1.1rem',
-    marginBottom: '0.5rem',
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: '600' as const,
+    fontSize: '1.2rem',
+    marginBottom: '1rem',
     display: 'flex',
     alignItems: 'center',
-    gap: '0.5rem'
+    gap: '0.75rem'
   }
 
   const textStyles = {
-    color: '#2d3748',
+    color: 'rgba(255, 255, 255, 0.9)',
     lineHeight: '1.8',
     fontSize: '1rem',
     whiteSpace: 'pre-wrap' as const,
     wordWrap: 'break-word' as const,
-    textAlign: 'justify' as const
-  }
-
-  const listStyles = {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0
-  }
-
-  const listItemStyles = {
-    background: '#f7fafc',
-    padding: '0.75rem 1rem',
-    marginBottom: '0.5rem',
-    borderRadius: '8px',
-    borderLeft: '4px solid #667eea',
-    color: '#2d3748',
-    lineHeight: '1.6',
-    fontSize: '0.95rem',
-    wordWrap: 'break-word' as const,
     textAlign: 'left' as const
   }
 
-  const jsonStyles = {
-    background: '#1a202c',
-    color: '#e2e8f0',
-    padding: '1.5rem',
-    borderRadius: '12px',
-    fontSize: '0.9rem',
-    overflow: 'auto',
-    fontFamily: 'Monaco, Consolas, monospace'
-  }
-
   const errorStyles = {
-    background: '#fed7d7',
-    color: '#c53030',
-    padding: '1rem',
-    borderRadius: '8px',
-    border: '1px solid #feb2b2',
-    marginTop: '1rem'
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+    color: 'rgba(254, 202, 202, 1)',
+    padding: '1.25rem',
+    borderRadius: '12px',
+    marginTop: '1rem',
+    backdropFilter: 'blur(10px)'
   }
 
   return (
@@ -155,24 +139,30 @@ export function Analyze() {
         <h2 style={titleStyles}>
           🔍 Analisar URL
         </h2>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <input 
             style={inputStyles} 
             placeholder="https://exemplo.com.br" 
             value={url} 
             onChange={e => setUrl(e.target.value)}
-            onFocus={(e) => (e.target as HTMLInputElement).style.borderColor = '#667eea'}
-            onBlur={(e) => (e.target as HTMLInputElement).style.borderColor = '#e1e5e9'}
+            onFocus={(e) => {
+              (e.target as HTMLInputElement).style.borderColor = 'rgba(102, 126, 234, 0.6)'
+              ;(e.target as HTMLInputElement).style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.2)'
+            }}
+            onBlur={(e) => {
+              (e.target as HTMLInputElement).style.borderColor = 'rgba(255, 255, 255, 0.15)'
+              ;(e.target as HTMLInputElement).style.boxShadow = 'none'
+            }}
           />
           <button 
             style={{
               ...buttonStyles,
-              opacity: (!url || loading) ? 0.6 : 1,
+              opacity: (!url || loading) ? 0.5 : 1,
               cursor: (!url || loading) ? 'not-allowed' : 'pointer'
             }}
             onClick={handleAnalyze} 
             disabled={!url || loading}
-            onMouseOver={(e) => !loading && url && ((e.target as HTMLButtonElement).style.transform = 'translateY(-2px)')}
+            onMouseOver={(e) => !loading && url && ((e.target as HTMLButtonElement).style.transform = 'translateY(-3px)')}
             onMouseOut={(e) => (e.target as HTMLButtonElement).style.transform = 'translateY(0)'}
           >
             {loading ? '⏳ Analisando...' : '🚀 Analisar'}
@@ -189,9 +179,9 @@ export function Analyze() {
             </div>
             <div style={{
               ...textStyles,
-              fontSize: '1.2rem',
-              fontWeight: '600',
-              textAlign: 'left' as const
+              fontSize: '1.4rem',
+              fontWeight: '600' as const,
+              color: 'white'
             }}>
               {result.title || 'Título não disponível'}
             </div>
@@ -203,10 +193,12 @@ export function Analyze() {
             </div>
             <div style={{
               ...textStyles,
-              background: '#f8f9fa',
-              padding: '1rem',
-              borderRadius: '8px',
-              border: '1px solid #e9ecef'
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(10px)',
+              padding: '1.5rem',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              lineHeight: '1.9'
             }}>
               {result.summary || 'Resumo não disponível.'}
             </div>
@@ -219,8 +211,8 @@ export function Analyze() {
               </div>
               <div style={{
                 display: 'grid',
-                gap: '1rem',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'
+                gap: '1.5rem',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))'
               }}>
                 {result.key_points.map((k: string, i: number) => {
                   // Extrai apenas o título da seção (sem emoji)
@@ -229,24 +221,39 @@ export function Analyze() {
                     const [, title, content] = titleMatch;
                     return (
                       <div key={i} style={{
-                        background: 'white',
-                        border: '1px solid #e9ecef',
-                        borderRadius: '12px',
-                        padding: '1.5rem',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '16px',
+                        padding: '1.75rem',
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-5px)'
+                        e.currentTarget.style.boxShadow = '0 12px 48px rgba(102, 126, 234, 0.3)'
+                        e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.4)'
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)'
+                        e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.2)'
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
                       }}>
                         <div style={{
-                          marginBottom: '0.75rem',
-                          fontSize: '1.1rem',
-                          fontWeight: '600',
-                          color: '#495057'
+                          marginBottom: '1rem',
+                          fontSize: '1.15rem',
+                          fontWeight: '600' as const,
+                          color: 'rgba(255, 255, 255, 0.95)',
+                          borderBottom: '2px solid rgba(102, 126, 234, 0.3)',
+                          paddingBottom: '0.75rem'
                         }}>
                           {title}
                         </div>
                         <div style={{
-                          color: '#6c757d',
-                          lineHeight: '1.5',
-                          whiteSpace: 'pre-wrap'
+                          color: 'rgba(255, 255, 255, 0.8)',
+                          lineHeight: '1.7',
+                          whiteSpace: 'pre-wrap',
+                          fontSize: '0.98rem'
                         }}>
                           {content}
                         </div>
@@ -257,11 +264,13 @@ export function Analyze() {
                   // Fallback para formato antigo
                   return (
                     <div key={i} style={{
-                      background: '#f7fafc',
-                      padding: '1rem',
-                      borderRadius: '8px',
-                      borderLeft: '4px solid #667eea',
-                      color: '#2d3748'
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      backdropFilter: 'blur(10px)',
+                      padding: '1.5rem',
+                      borderRadius: '12px',
+                      borderLeft: '4px solid rgba(102, 126, 234, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: 'rgba(255, 255, 255, 0.9)'
                     }}>
                       {k}
                     </div>
@@ -273,8 +282,32 @@ export function Analyze() {
 
         </div>
       )}
+
+      <style>{`
+        input::placeholder {
+          color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: rgba(102, 126, 234, 0.4);
+          border-radius: 10px;
+          border: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(102, 126, 234, 0.6);
+        }
+      `}</style>
     </div>
   )
 }
-
-
