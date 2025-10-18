@@ -223,10 +223,10 @@ export function Analyze() {
                 gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'
               }}>
                 {result.key_points.map((k: string, i: number) => {
-                  // Extrai o emoji e título da seção
-                  const emojiMatch = k.match(/^([🎯🛍️💰🔧📞🏢])\s*(.+?):\s*(.+)$/);
-                  if (emojiMatch) {
-                    const [, emoji, title, content] = emojiMatch;
+                  // Extrai apenas o título da seção (sem emoji)
+                  const titleMatch = k.match(/^[🎯🛍️💰🔧📞🏢🎯]\s*(.+?):\s*(.+)$/);
+                  if (titleMatch) {
+                    const [, title, content] = titleMatch;
                     return (
                       <div key={i} style={{
                         background: 'white',
@@ -236,16 +236,12 @@ export function Analyze() {
                         boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                       }}>
                         <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem',
                           marginBottom: '0.75rem',
                           fontSize: '1.1rem',
                           fontWeight: '600',
                           color: '#495057'
                         }}>
-                          <span style={{ fontSize: '1.2rem' }}>{emoji}</span>
-                          <span>{title}</span>
+                          {title}
                         </div>
                         <div style={{
                           color: '#6c757d',
@@ -275,72 +271,6 @@ export function Analyze() {
             </div>
           )}
 
-          {result.entities && (
-            <div style={sectionStyles}>
-              <div style={labelStyles}>
-                🔧 Dados Estruturados
-              </div>
-              <div style={{
-                display: 'grid',
-                gap: '1rem',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))'
-              }}>
-                {Object.entries(result.entities).map(([key, value], index) => {
-                  const labels: { [key: string]: string } = {
-                    company_name: '🏢 Empresa',
-                    products: '🛍️ Produtos',
-                    pricing: '💰 Preços',
-                    tech_stack: '🔧 Tecnologias',
-                    contacts: '📞 Contatos'
-                  };
-                  
-                  const emoji = labels[key]?.split(' ')[0] || '📋';
-                  const title = labels[key]?.split(' ').slice(1).join(' ') || key;
-                  
-                  return (
-                    <div key={index} style={{
-                      background: 'white',
-                      border: '1px solid #e9ecef',
-                      borderRadius: '12px',
-                      padding: '1.5rem',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                    }}>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        marginBottom: '0.75rem',
-                        fontSize: '1.1rem',
-                        fontWeight: '600',
-                        color: '#495057'
-                      }}>
-                        <span style={{ fontSize: '1.2rem' }}>{emoji}</span>
-                        <span>{title}</span>
-                      </div>
-                      <div style={{
-                        color: '#6c757d',
-                        lineHeight: '1.5'
-                      }}>
-                        {Array.isArray(value) ? (
-                          <ul style={{ margin: 0, paddingLeft: '1rem' }}>
-                            {value.map((item, i) => (
-                              <li key={i} style={{ marginBottom: '0.25rem' }}>
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <div style={{ whiteSpace: 'pre-wrap' }}>
-                            {String(value)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>
