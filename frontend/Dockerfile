@@ -15,3 +15,4 @@ EXPOSE 5173
 # Comando para iniciar Vite
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
 
+
