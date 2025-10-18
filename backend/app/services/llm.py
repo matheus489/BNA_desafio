@@ -126,7 +126,9 @@ def _parse_output(text: str) -> Dict[str, Any]:
             else:
                 section_content = text[section_start:].replace(f"### {section}", "").strip()
             
-            if section_content and section_content != "Não especificado":
+            # Limpa o conteúdo e verifica se é válido
+            section_content = section_content.strip()
+            if section_content and section_content != "Não especificado" and len(section_content) > 3:
                 key_points.append(f"{section}: {section_content}")
     
     # Se não encontrou seções estruturadas, usa o parser antigo
@@ -187,7 +189,7 @@ def _extract_mock_analysis(raw_text: str) -> Dict[str, Any]:
     ]
     
     for section_title, content in sections:
-        if content and content != "Não especificado":
+        if content and content != "Não especificado" and len(content.strip()) > 3:
             key_points.append(f"{section_title}: {content}")
     
     # Extrai entidades básicas
@@ -370,15 +372,46 @@ def _extract_opportunities(text: str) -> str:
     text_lower = text.lower()
     opportunities = []
     
-    if any(word in text_lower for word in ['crescimento', 'expansão', 'escalar']):
+    # Palavras-chave para crescimento
+    if any(word in text_lower for word in ['crescimento', 'expansão', 'escalar', 'crescer', 'expandir']):
         opportunities.append("Oportunidade de crescimento")
-    if any(word in text_lower for word in ['automação', 'otimização', 'eficiência']):
+    
+    # Palavras-chave para automação
+    if any(word in text_lower for word in ['automação', 'otimização', 'eficiência', 'automatizar', 'otimizar']):
         opportunities.append("Necessidade de automação")
-    if any(word in text_lower for word in ['digital', 'transformação', 'modernização']):
+    
+    # Palavras-chave para transformação digital
+    if any(word in text_lower for word in ['digital', 'transformação', 'modernização', 'digitalizar']):
         opportunities.append("Transformação digital")
-    if any(word in text_lower for word in ['ia', 'ai', 'inteligência artificial']):
+    
+    # Palavras-chave para IA
+    if any(word in text_lower for word in ['ia', 'ai', 'inteligência artificial', 'machine learning', 'ml']):
         opportunities.append("Adoção de IA")
     
-    return ", ".join(opportunities) if opportunities else "Não especificado"
+    # Palavras-chave para inovação
+    if any(word in text_lower for word in ['inovação', 'inovador', 'disruptivo', 'tecnologia']):
+        opportunities.append("Empresa inovadora")
+    
+    # Palavras-chave para problemas/desafios
+    if any(word in text_lower for word in ['desafio', 'problema', 'dificuldade', 'limitação']):
+        opportunities.append("Possíveis pain points identificados")
+    
+    # Palavras-chave para mercado
+    if any(word in text_lower for word in ['mercado', 'competição', 'concorrência', 'diferencial']):
+        opportunities.append("Análise de mercado necessária")
+    
+    # Se não encontrou oportunidades específicas, gera insights baseados no contexto
+    if not opportunities:
+        # Analisa o tipo de empresa baseado no conteúdo
+        if any(word in text_lower for word in ['startup', 'pequena', 'média empresa']):
+            opportunities.append("Empresa em crescimento - oportunidades de parceria")
+        elif any(word in text_lower for word in ['grande', 'corporação', 'enterprise']):
+            opportunities.append("Empresa estabelecida - foco em ROI e eficiência")
+        elif any(word in text_lower for word in ['tech', 'tecnologia', 'software']):
+            opportunities.append("Empresa de tecnologia - foco em inovação")
+        else:
+            opportunities.append("Análise de necessidades específicas recomendada")
+    
+    return ", ".join(opportunities)
 
 
