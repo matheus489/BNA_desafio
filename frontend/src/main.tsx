@@ -5,6 +5,7 @@ import { App } from './pages/App'
 import { Login } from './pages/Login'
 import { Analyze } from './pages/Analyze'
 import { Chat } from './pages/Chat'
+import { Compare } from './pages/Compare'
 import { Admin } from './pages/Admin'
 import { History } from './pages/History'
 
@@ -17,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/login" element={<Login />} />
           <Route path="/analyze" element={<Analyze />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/compare" element={<Compare />} />
           <Route path="/history" element={<History />} />
           <Route path="/admin" element={localStorage.getItem('role') === 'admin' ? <Admin /> : <Navigate to="/login" replace />} />
         </Route>

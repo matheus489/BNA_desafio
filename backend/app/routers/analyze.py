@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import json
+from typing import List
 
 # Modelos, schemas e dependências
 from .. import models, schemas
@@ -10,6 +11,7 @@ from ..security import get_current_user_payload
 from ..services.scraper import fetch_url
 from ..services.llm import summarize_text
 from ..services.text_formatter import format_content_for_display, format_title, format_summary, format_key_points
+from ..services.comparison import compare_companies
 
 
 router = APIRouter()
@@ -60,5 +62,50 @@ def _to_response(analysis: models.PageAnalysis) -> schemas.AnalyzeResponse:
         entities=entities,
         created_at=analysis.created_at,
     )
+
+
+@router.post("/compare")
+async def compare_analyses(
+    analysis_ids: List[int],
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user_payload)
+):
+    """
+    Compara múltiplas empresas analisadas (2-5) e gera insights com IA.
+    
+    Body: { "analysis_ids": [1, 2, 3] }
+    """
+    if len(analysis_ids) < 2:
+        raise HTTPException(
+            status_code=400,
+            detail="Selecione pelo menos 2 empresas para comparar"
+        )
+    
+    if len(analysis_ids) > 5:
+        raise HTTPException(
+            status_code=400,
+            detail="Máximo de 5 empresas podem ser comparadas por vez"
+        )
+    
+    # Busca análises do banco
+    analyses = db.query(models.PageAnalysis).filter(
+        models.PageAnalysis.id.in_(analysis_ids)
+    ).all()
+    
+    if len(analyses) != len(analysis_ids):
+        raise HTTPException(
+            status_code=404,
+            detail="Uma ou mais análises não foram encontradas"
+        )
+    
+    # Gera comparação
+    try:
+        comparison = await compare_companies(analyses)
+        return comparison
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Erro ao gerar comparação: {str(e)}"
+        )
 
 

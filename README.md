@@ -2,9 +2,10 @@
 
 Solução completa com RAG e IA para coletar, resumir e estruturar informações de páginas web, apoiando o time de vendas antes de reuniões.
 
-## 🚀 **NOVO: Sistema RAG com Web Search Automático**
+## 🚀 **NOVO: Features Avançadas para Vendas**
 
-Agora com **Chat RAG (Retrieval-Augmented Generation)** que combina:
+### **Chat RAG com Web Search Automático**
+**Chat RAG (Retrieval-Augmented Generation)** que combina:
 - 🔍 **Busca vetorial** no histórico de análises (embeddings semânticos)
 - 🌐 **Web Search automático** em tempo real (Google/DuckDuckGo)
 - 🤖 **GPT-4** para respostas contextualizadas e inteligentes
@@ -14,6 +15,16 @@ Agora com **Chat RAG (Retrieval-Augmented Generation)** que combina:
 - "Qual o stack tecnológico da empresa X?"
 - "Quais empresas de IA já analisei?"
 - "Me dê informações sobre pricing de SaaS B2B"
+
+### **🔄 [NOVO] Comparação Inteligente entre Empresas**
+Selecione 2-5 empresas analisadas e receba:
+- ⚖️ **Comparação lado a lado** de stack, pricing e ICP
+- 🏆 **Ranking de prioridade** gerado por IA
+- 💡 **Oportunidades únicas** de cada empresa
+- 🎯 **Estratégia de abordagem** para o lead mais promissor
+
+**Por que isso importa:**
+Vendedores precisam priorizar leads. Essa feature usa IA para identificar automaticamente qual empresa tem maior fit e deve ser abordada primeiro.
 
 ## Arquitetura
 - Backend: FastAPI (Python), SQLAlchemy (PostgreSQL), JWT, serviços de scraping, LLM e RAG

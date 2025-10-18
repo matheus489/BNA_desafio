@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 
 // Função para copiar texto para a área de transferência
@@ -32,6 +32,17 @@ export function Analyze() {
   const [loading, setLoading] = useState(false)
   const [copiedItems, setCopiedItems] = useState<Set<string>>(new Set())
   const [generatingReport, setGeneratingReport] = useState(false)
+  const resultRef = useRef<HTMLDivElement>(null)
+
+  // Scroll automático quando resultado é gerado
+  useEffect(() => {
+    if (result && resultRef.current) {
+      resultRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      })
+    }
+  }, [result])
 
   // Função para copiar texto e mostrar feedback
   async function handleCopy(text: string, itemId: string) {
@@ -286,7 +297,7 @@ export function Analyze() {
       </div>
 
       {result && (
-        <div style={resultCardStyles}>
+        <div ref={resultRef} style={resultCardStyles}>
           <div style={sectionStyles}>
             <div style={sectionHeaderStyles}>
               <div style={labelStyles}>
