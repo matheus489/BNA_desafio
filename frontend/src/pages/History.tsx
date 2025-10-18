@@ -1,6 +1,28 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
+// Função para copiar texto para a área de transferência
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch (err) {
+    // Fallback para navegadores mais antigos
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.select()
+    try {
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      return true
+    } catch (err) {
+      document.body.removeChild(textArea)
+      return false
+    }
+  }
+}
+
 const API = 'http://localhost:8000'
 
 export function History() {
@@ -8,6 +30,22 @@ export function History() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
+  const [copiedItems, setCopiedItems] = useState<Set<number>>(new Set())
+
+  // Função para copiar item e mostrar feedback
+  async function handleCopyItem(itemId: number, content: string) {
+    const success = await copyToClipboard(content)
+    if (success) {
+      setCopiedItems(prev => new Set(prev).add(itemId))
+      setTimeout(() => {
+        setCopiedItems(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(itemId)
+          return newSet
+        })
+      }, 2000)
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -219,6 +257,22 @@ export function History() {
     fontSize: '1.2rem'
   }
 
+  const copyButtonStyles = {
+    background: 'rgba(102, 126, 234, 0.2)',
+    border: '1px solid rgba(102, 126, 234, 0.4)',
+    color: 'white',
+    padding: '0.5rem 0.75rem',
+    borderRadius: '8px',
+    fontSize: '0.85rem',
+    cursor: 'pointer',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    backdropFilter: 'blur(10px)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.375rem',
+    fontWeight: '500' as const
+  }
+
   if (loading) {
     return (
       <div style={containerStyles}>
@@ -282,6 +336,7 @@ export function History() {
                   <th style={headerStyles}>📄 Título</th>
                   <th style={headerStyles}>📝 Resumo</th>
                   <th style={headerStyles}>📅 Data</th>
+                  <th style={headerStyles}>📋 Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -323,6 +378,36 @@ export function History() {
                     <td style={cellStyles}>
                       <div style={dateStyles}>
                         {new Date(item.created_at).toLocaleString('pt-BR')}
+                      </div>
+                    </td>
+                    <td style={cellStyles}>
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <button
+                          style={{
+                            ...copyButtonStyles,
+                            background: copiedItems.has(item.id) 
+                              ? 'rgba(16, 185, 129, 0.3)' 
+                              : 'rgba(102, 126, 234, 0.2)',
+                            borderColor: copiedItems.has(item.id) 
+                              ? 'rgba(16, 185, 129, 0.5)' 
+                              : 'rgba(102, 126, 234, 0.4)'
+                          }}
+                          onClick={() => handleCopyItem(item.id, `Título: ${item.title}\nURL: ${item.url}\nResumo: ${item.summary}`)}
+                          onMouseOver={(e) => {
+                            if (!copiedItems.has(item.id)) {
+                              (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.3)'
+                              ;(e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'
+                            }
+                          }}
+                          onMouseOut={(e) => {
+                            if (!copiedItems.has(item.id)) {
+                              (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.2)'
+                              ;(e.target as HTMLButtonElement).style.transform = 'translateY(0)'
+                            }
+                          }}
+                        >
+                          {copiedItems.has(item.id) ? '✅ Copiado!' : '📋 Copiar'}
+                        </button>
                       </div>
                     </td>
                   </tr>

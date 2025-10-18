@@ -415,3 +415,191 @@ def _extract_opportunities(text: str) -> str:
     return ", ".join(opportunities)
 
 
+async def generate_detailed_report(analysis: Any) -> Dict[str, Any]:
+    """
+    Gera um relatório detalhado expandido usando IA para uma análise específica.
+    
+    Args:
+        analysis: Objeto PageAnalysis do banco de dados
+        
+    Returns:
+        Dict com seções detalhadas do relatório
+    """
+    try:
+        import openai
+        openai.api_key = settings.OPENAI_API_KEY
+        
+        # Monta o contexto da análise
+        context = f"""
+        ANÁLISE ORIGINAL:
+        URL: {analysis.url}
+        Título: {analysis.title or 'N/A'}
+        Resumo: {analysis.summary or 'N/A'}
+        Pontos-chave: {analysis.key_points or 'N/A'}
+        Entidades: {analysis.entities or 'N/A'}
+        """
+        
+        # Prompt para gerar relatório detalhado
+        system_prompt = """Você é um consultor sênior de vendas B2B especializado em análise profunda de empresas e geração de insights estratégicos para vendas."""
+        
+        user_prompt = f"""Com base na análise fornecida abaixo, gere um relatório executivo COMPLETO e DETALHADO que expanda significativamente as informações originais.
+
+ANÁLISE BASE:
+{context}
+
+Gere um relatório estruturado com as seguintes seções. IMPORTANTE: Cada seção deve ter CONTEÚDO COMPLETO E DETALHADO (não apenas títulos ou bullets):
+
+=== RESUMO EXECUTIVO EXPANDIDO ===
+(Escreva 300-500 palavras com análise profunda da empresa, seu posicionamento no mercado, insights sobre modelo de negócio, estratégia e avaliação de maturidade e potencial de crescimento)
+
+=== ANÁLISE DE MERCADO ===
+(Escreva 200-400 palavras sobre segmento de mercado, concorrência, tendências do setor e oportunidades/ameaças identificadas)
+
+=== OPORTUNIDADES DE VENDAS ===
+(Escreva 200-400 palavras detalhando pain points específicos, necessidades de tecnologia ou processos, estratégias de abordagem personalizadas e timing ideal para contato)
+
+=== STACK TECNOLÓGICO ===
+(Escreva 150-300 palavras com análise detalhada das tecnologias utilizadas, gaps tecnológicos e oportunidades de modernização)
+
+=== ESTRATÉGIA DE ABORDAGEM ===
+(Escreva 200-400 palavras identificando personas de decisão, argumentos de valor específicos, objeções comuns e como contorná-las, e próximos passos recomendados)
+
+=== INSIGHTS ADICIONAIS ===
+(Escreva 150-300 palavras com observações sobre cultura organizacional, sinais de crescimento ou mudança, e recomendações específicas para o time de vendas)
+
+REGRAS IMPORTANTES:
+- Escreva em PORTUGUÊS do Brasil
+- Cada seção DEVE ter parágrafos completos e bem desenvolvidos
+- Seja específico e baseado em evidências da análise
+- Use insights profissionais de vendas B2B
+- Foque em informações acionáveis e estratégicas
+- Mantenha tom consultivo e profissional
+- NÃO use apenas bullets ou listas - desenvolva o conteúdo em texto corrido
+- Se alguma informação não estiver disponível, faça inferências razoáveis baseadas no contexto"""
+
+        # Chama GPT-4 para gerar o relatório detalhado
+        response = await openai.ChatCompletion.acreate(
+            model=settings.OPENAI_MODEL,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.7,
+            max_tokens=4500
+        )
+        
+        # Processa a resposta e extrai as seções
+        content = response['choices'][0]['message']['content']
+        
+        # Log do conteúdo completo para debug
+        print(f"=== CONTEÚDO GERADO PELA IA ===")
+        print(content[:500])  # Primeiros 500 caracteres
+        print(f"... (total: {len(content)} caracteres)")
+        
+        # Extrai as seções do relatório
+        sections = {
+            'expanded_summary': extract_section(content, 'RESUMO EXECUTIVO EXPANDIDO'),
+            'market_analysis': extract_section(content, 'ANÁLISE DE MERCADO'),
+            'sales_opportunities': extract_section(content, 'OPORTUNIDADES DE VENDAS'),
+            'tech_stack': extract_section(content, 'STACK TECNOLÓGICO'),
+            'approach_strategy': extract_section(content, 'ESTRATÉGIA DE ABORDAGEM'),
+            'additional_insights': extract_section(content, 'INSIGHTS ADICIONAIS')
+        }
+        
+        # Log das seções extraídas para debug
+        for key, value in sections.items():
+            print(f"\n=== {key}: {len(value)} caracteres ===")
+            print(value[:150] if value else "VAZIO")
+        
+        return sections
+        
+    except Exception as e:
+        print(f"Erro ao gerar relatório detalhado: {e}")
+        # Retorna conteúdo básico em caso de erro
+        return {
+            'expanded_summary': f"Relatório detalhado para {analysis.title or 'análise'} - Erro na geração automática.",
+            'market_analysis': "Análise de mercado não disponível no momento.",
+            'sales_opportunities': "Oportunidades de vendas serão analisadas manualmente.",
+            'tech_stack': "Stack tecnológico será avaliado em análise posterior.",
+            'approach_strategy': "Estratégia de abordagem será definida pelo time de vendas.",
+            'additional_insights': "Insights adicionais serão coletados em próximas interações."
+        }
+
+
+def extract_section(content: str, section_name: str) -> str:
+    """
+    Extrai uma seção específica do conteúdo gerado.
+    
+    Args:
+        content: Conteúdo completo do relatório
+        section_name: Nome da seção a extrair
+        
+    Returns:
+        Conteúdo da seção ou mensagem padrão
+    """
+    try:
+        # Padrões de marcação de seção que vamos procurar
+        patterns = [
+            f"=== {section_name} ===",
+            f"### {section_name}",
+            f"## {section_name}",
+            f"# {section_name}",
+            section_name
+        ]
+        
+        lines = content.split('\n')
+        section_start = -1
+        section_end = len(lines)
+        
+        # Procura o início da seção
+        for i, line in enumerate(lines):
+            line_upper = line.upper().strip()
+            for pattern in patterns:
+                if pattern.upper() in line_upper:
+                    section_start = i + 1  # Começa na linha APÓS o título
+                    break
+            if section_start != -1:
+                break
+        
+        # Se encontrou o início, procura o fim (próxima seção)
+        if section_start != -1:
+            for i in range(section_start, len(lines)):
+                line = lines[i].strip()
+                # Verifica se é início de nova seção
+                if line.startswith('===') or line.startswith('###') or line.startswith('##') or line.startswith('#'):
+                    # Verifica se não é uma linha dentro de um parágrafo
+                    if i > section_start and any(marker in line for marker in ['===', '###', '##']):
+                        section_end = i
+                        break
+            
+            # Extrai o conteúdo
+            section_lines = lines[section_start:section_end]
+            
+            # Remove linhas vazias do início e fim
+            while section_lines and not section_lines[0].strip():
+                section_lines.pop(0)
+            while section_lines and not section_lines[-1].strip():
+                section_lines.pop()
+            
+            # Remove instruções entre parênteses (se houver)
+            section_content = '\n'.join(section_lines)
+            
+            # Remove possíveis instruções como "(Escreva 300-500 palavras...)"
+            import re
+            section_content = re.sub(r'\(Escreva.*?\)', '', section_content, flags=re.IGNORECASE | re.DOTALL)
+            section_content = section_content.strip()
+            
+            if section_content and len(section_content) > 50:  # Pelo menos 50 caracteres
+                return section_content
+            else:
+                return f"Conteúdo da seção {section_name} não foi gerado adequadamente. Tente gerar o relatório novamente."
+        
+        return f"Seção {section_name} não encontrada no relatório gerado."
+        
+    except Exception as e:
+        print(f"Erro ao extrair seção {section_name}: {e}")
+        import traceback
+        traceback.print_exc()
+        return f"Erro ao processar seção {section_name}: {str(e)}"
+
+

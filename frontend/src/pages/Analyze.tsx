@@ -1,6 +1,28 @@
 import { useState } from 'react'
 import axios from 'axios'
 
+// Função para copiar texto para a área de transferência
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch (err) {
+    // Fallback para navegadores mais antigos
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.select()
+    try {
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      return true
+    } catch (err) {
+      document.body.removeChild(textArea)
+      return false
+    }
+  }
+}
+
 const API = 'http://localhost:8000'
 
 export function Analyze() {
@@ -8,6 +30,58 @@ export function Analyze() {
   const [result, setResult] = useState<any | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [copiedItems, setCopiedItems] = useState<Set<string>>(new Set())
+  const [generatingReport, setGeneratingReport] = useState(false)
+
+  // Função para copiar texto e mostrar feedback
+  async function handleCopy(text: string, itemId: string) {
+    const success = await copyToClipboard(text)
+    if (success) {
+      setCopiedItems(prev => new Set(prev).add(itemId))
+      setTimeout(() => {
+        setCopiedItems(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(itemId)
+          return newSet
+        })
+      }, 2000)
+    }
+  }
+
+  // Função para gerar relatório PDF detalhado
+  async function handleGenerateReport() {
+    if (!result?.id || generatingReport) return
+    
+    setGeneratingReport(true)
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.post(
+        `${API}/reports/generate/${result.id}`,
+        {},
+        { 
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: 'blob'
+        }
+      )
+      
+      // Cria blob e faz download
+      const blob = new Blob([response.data], { type: 'application/pdf' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `relatorio_detalhado_${result.id}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+      
+    } catch (err: any) {
+      console.error('Erro ao gerar relatório:', err)
+      alert('❌ Erro ao gerar relatório: ' + (err?.response?.data?.detail || 'Tente novamente.'))
+    } finally {
+      setGeneratingReport(false)
+    }
+  }
 
   // Envia a URL para a API e exibe o resultado
   async function handleAnalyze() {
@@ -133,6 +207,46 @@ export function Analyze() {
     backdropFilter: 'blur(10px)'
   }
 
+  const copyButtonStyles = {
+    background: 'rgba(102, 126, 234, 0.2)',
+    border: '1px solid rgba(102, 126, 234, 0.4)',
+    color: 'white',
+    padding: '0.5rem 0.75rem',
+    borderRadius: '8px',
+    fontSize: '0.85rem',
+    cursor: 'pointer',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    backdropFilter: 'blur(10px)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.375rem',
+    fontWeight: '500' as const
+  }
+
+  const sectionHeaderStyles = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '1rem'
+  }
+
+  const reportButtonStyles = {
+    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.8) 0%, rgba(5, 150, 105, 0.8) 100%)',
+    border: '1px solid rgba(16, 185, 129, 0.4)',
+    color: 'white',
+    padding: '0.75rem 1.5rem',
+    borderRadius: '12px',
+    fontSize: '0.9rem',
+    fontWeight: '600' as const,
+    cursor: 'pointer',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    boxShadow: '0 8px 32px rgba(16, 185, 129, 0.4)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    backdropFilter: 'blur(10px)'
+  }
+
   return (
     <div style={containerStyles}>
       <div style={cardStyles}>
@@ -174,8 +288,35 @@ export function Analyze() {
       {result && (
         <div style={resultCardStyles}>
           <div style={sectionStyles}>
-            <div style={labelStyles}>
-              📄 Título
+            <div style={sectionHeaderStyles}>
+              <div style={labelStyles}>
+                📄 Título
+              </div>
+              <button
+                style={{
+                  ...reportButtonStyles,
+                  opacity: generatingReport ? 0.5 : 1,
+                  cursor: generatingReport ? 'not-allowed' : 'pointer'
+                }}
+                onClick={handleGenerateReport}
+                disabled={generatingReport}
+                onMouseOver={(e) => {
+                  if (!generatingReport) {
+                    (e.target as HTMLButtonElement).style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.9) 0%, rgba(5, 150, 105, 0.9) 100%)'
+                    ;(e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'
+                    ;(e.target as HTMLButtonElement).style.boxShadow = '0 12px 48px rgba(16, 185, 129, 0.5)'
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (!generatingReport) {
+                    (e.target as HTMLButtonElement).style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.8) 0%, rgba(5, 150, 105, 0.8) 100%)'
+                    ;(e.target as HTMLButtonElement).style.transform = 'translateY(0)'
+                    ;(e.target as HTMLButtonElement).style.boxShadow = '0 8px 32px rgba(16, 185, 129, 0.4)'
+                  }
+                }}
+              >
+                {generatingReport ? '⏳ Gerando...' : '📊 Gerar Relatório'}
+              </button>
             </div>
             <div style={{
               ...textStyles,
@@ -188,8 +329,36 @@ export function Analyze() {
           </div>
 
           <div style={sectionStyles}>
-            <div style={labelStyles}>
-              📝 Resumo
+            <div style={sectionHeaderStyles}>
+              <div style={labelStyles}>
+                📝 Resumo
+              </div>
+              <button
+                style={{
+                  ...copyButtonStyles,
+                  background: copiedItems.has('summary') 
+                    ? 'rgba(16, 185, 129, 0.3)' 
+                    : 'rgba(102, 126, 234, 0.2)',
+                  borderColor: copiedItems.has('summary') 
+                    ? 'rgba(16, 185, 129, 0.5)' 
+                    : 'rgba(102, 126, 234, 0.4)'
+                }}
+                onClick={() => handleCopy(result.summary || 'Resumo não disponível.', 'summary')}
+                onMouseOver={(e) => {
+                  if (!copiedItems.has('summary')) {
+                    (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.3)'
+                    ;(e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (!copiedItems.has('summary')) {
+                    (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.2)'
+                    ;(e.target as HTMLButtonElement).style.transform = 'translateY(0)'
+                  }
+                }}
+              >
+                {copiedItems.has('summary') ? '✅ Copiado!' : '📋 Copiar'}
+              </button>
             </div>
             <div style={{
               ...textStyles,
@@ -227,7 +396,8 @@ export function Analyze() {
                         borderRadius: '16px',
                         padding: '1.75rem',
                         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        position: 'relative' as const
                       }}
                       onMouseOver={(e) => {
                         e.currentTarget.style.transform = 'translateY(-5px)'
@@ -240,14 +410,48 @@ export function Analyze() {
                         e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
                       }}>
                         <div style={{
-                          marginBottom: '1rem',
-                          fontSize: '1.15rem',
-                          fontWeight: '600' as const,
-                          color: 'rgba(255, 255, 255, 0.95)',
-                          borderBottom: '2px solid rgba(102, 126, 234, 0.3)',
-                          paddingBottom: '0.75rem'
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '1rem'
                         }}>
-                          {title}
+                          <div style={{
+                            fontSize: '1.15rem',
+                            fontWeight: '600' as const,
+                            color: 'rgba(255, 255, 255, 0.95)',
+                            borderBottom: '2px solid rgba(102, 126, 234, 0.3)',
+                            paddingBottom: '0.75rem',
+                            flex: 1
+                          }}>
+                            {title}
+                          </div>
+                          <button
+                            style={{
+                              ...copyButtonStyles,
+                              background: copiedItems.has(`keypoint-${i}`) 
+                                ? 'rgba(16, 185, 129, 0.3)' 
+                                : 'rgba(102, 126, 234, 0.2)',
+                              borderColor: copiedItems.has(`keypoint-${i}`) 
+                                ? 'rgba(16, 185, 129, 0.5)' 
+                                : 'rgba(102, 126, 234, 0.4)',
+                              marginLeft: '1rem'
+                            }}
+                            onClick={() => handleCopy(`${title}:\n${content}`, `keypoint-${i}`)}
+                            onMouseOver={(e) => {
+                              if (!copiedItems.has(`keypoint-${i}`)) {
+                                (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.3)'
+                                ;(e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'
+                              }
+                            }}
+                            onMouseOut={(e) => {
+                              if (!copiedItems.has(`keypoint-${i}`)) {
+                                (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.2)'
+                                ;(e.target as HTMLButtonElement).style.transform = 'translateY(0)'
+                              }
+                            }}
+                          >
+                            {copiedItems.has(`keypoint-${i}`) ? '✅' : '📋'}
+                          </button>
                         </div>
                         <div style={{
                           color: 'rgba(255, 255, 255, 0.8)',
@@ -270,9 +474,46 @@ export function Analyze() {
                       borderRadius: '12px',
                       borderLeft: '4px solid rgba(102, 126, 234, 0.8)',
                       border: '1px solid rgba(255, 255, 255, 0.1)',
-                      color: 'rgba(255, 255, 255, 0.9)'
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      position: 'relative' as const
                     }}>
-                      {k}
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        gap: '1rem'
+                      }}>
+                        <div style={{ flex: 1 }}>
+                          {k}
+                        </div>
+                        <button
+                          style={{
+                            ...copyButtonStyles,
+                            background: copiedItems.has(`fallback-${i}`) 
+                              ? 'rgba(16, 185, 129, 0.3)' 
+                              : 'rgba(102, 126, 234, 0.2)',
+                            borderColor: copiedItems.has(`fallback-${i}`) 
+                              ? 'rgba(16, 185, 129, 0.5)' 
+                              : 'rgba(102, 126, 234, 0.4)',
+                            flexShrink: 0
+                          }}
+                          onClick={() => handleCopy(k, `fallback-${i}`)}
+                          onMouseOver={(e) => {
+                            if (!copiedItems.has(`fallback-${i}`)) {
+                              (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.3)'
+                              ;(e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'
+                            }
+                          }}
+                          onMouseOut={(e) => {
+                            if (!copiedItems.has(`fallback-${i}`)) {
+                              (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.2)'
+                              ;(e.target as HTMLButtonElement).style.transform = 'translateY(0)'
+                            }
+                          }}
+                        >
+                          {copiedItems.has(`fallback-${i}`) ? '✅' : '📋'}
+                        </button>
+                      </div>
                     </div>
                   );
                 })}

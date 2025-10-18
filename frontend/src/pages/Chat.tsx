@@ -1,6 +1,28 @@
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 
+// Função para copiar texto para a área de transferência
+async function copyToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch (err) {
+    // Fallback para navegadores mais antigos
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.select()
+    try {
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      return true
+    } catch (err) {
+      document.body.removeChild(textArea)
+      return false
+    }
+  }
+}
+
 const API = 'http://localhost:8000'
 
 interface Message {
@@ -22,7 +44,23 @@ export function Chat() {
   const [loading, setLoading] = useState(false)
   const [useWebSearch, setUseWebSearch] = useState(true)
   const [loadingHistory, setLoadingHistory] = useState(true)
+  const [copiedMessages, setCopiedMessages] = useState<Set<number>>(new Set())
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // Função para copiar mensagem e mostrar feedback
+  async function handleCopyMessage(messageId: number, content: string) {
+    const success = await copyToClipboard(content)
+    if (success) {
+      setCopiedMessages(prev => new Set(prev).add(messageId))
+      setTimeout(() => {
+        setCopiedMessages(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(messageId)
+          return newSet
+        })
+      }, 2000)
+    }
+  }
 
   // Carrega histórico ao montar componente
   useEffect(() => {
@@ -299,6 +337,28 @@ export function Chat() {
     border: '1px solid rgba(255, 255, 255, 0.2)'
   })
 
+  const copyButtonStyles = {
+    background: 'rgba(102, 126, 234, 0.2)',
+    border: '1px solid rgba(102, 126, 234, 0.4)',
+    color: 'white',
+    padding: '0.5rem 0.75rem',
+    borderRadius: '8px',
+    fontSize: '0.85rem',
+    cursor: 'pointer',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    backdropFilter: 'blur(10px)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.375rem',
+    fontWeight: '500' as const,
+    position: 'absolute' as const,
+    top: '0.75rem',
+    right: '0.75rem',
+    opacity: 0,
+    transform: 'translateY(-5px)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+  }
+
   if (loadingHistory) {
     return (
       <div style={containerStyles}>
@@ -360,9 +420,52 @@ export function Chat() {
           ) : (
             messages.map((msg) => (
               <div key={msg.id} style={messageStyles(msg.role === 'user')}>
-                <div>
-                  <div style={messageBubbleStyles(msg.role === 'user')}>
+                <div style={{ position: 'relative' as const }}>
+                  <div 
+                    style={messageBubbleStyles(msg.role === 'user')}
+                    onMouseOver={(e) => {
+                      const copyBtn = e.currentTarget.querySelector('.copy-button') as HTMLElement
+                      if (copyBtn) {
+                        copyBtn.style.opacity = '1'
+                        copyBtn.style.transform = 'translateY(0)'
+                      }
+                    }}
+                    onMouseOut={(e) => {
+                      const copyBtn = e.currentTarget.querySelector('.copy-button') as HTMLElement
+                      if (copyBtn && !copiedMessages.has(msg.id)) {
+                        copyBtn.style.opacity = '0'
+                        copyBtn.style.transform = 'translateY(-5px)'
+                      }
+                    }}
+                  >
                     {msg.content}
+                    <button
+                      className="copy-button"
+                      style={{
+                        ...copyButtonStyles,
+                        background: copiedMessages.has(msg.id) 
+                          ? 'rgba(16, 185, 129, 0.3)' 
+                          : 'rgba(102, 126, 234, 0.2)',
+                        borderColor: copiedMessages.has(msg.id) 
+                          ? 'rgba(16, 185, 129, 0.5)' 
+                          : 'rgba(102, 126, 234, 0.4)'
+                      }}
+                      onClick={() => handleCopyMessage(msg.id, msg.content)}
+                      onMouseOver={(e) => {
+                        if (!copiedMessages.has(msg.id)) {
+                          (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.3)'
+                          ;(e.target as HTMLButtonElement).style.transform = 'translateY(-2px)'
+                        }
+                      }}
+                      onMouseOut={(e) => {
+                        if (!copiedMessages.has(msg.id)) {
+                          (e.target as HTMLButtonElement).style.background = 'rgba(102, 126, 234, 0.2)'
+                          ;(e.target as HTMLButtonElement).style.transform = 'translateY(0)'
+                        }
+                      }}
+                    >
+                      {copiedMessages.has(msg.id) ? '✅' : '📋'}
+                    </button>
                   </div>
                   
                   {/* Sources */}
