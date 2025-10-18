@@ -1,0 +1,36 @@
+# Fly.io configuration for BNA Frontend
+app = "bna-frontend"
+primary_region = "gru"  # São Paulo, Brazil
+
+[build]
+  dockerfile = "./Dockerfile"
+
+[env]
+  PORT = "5173"
+
+[http_service]
+  internal_port = 5173
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 5173
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256
+

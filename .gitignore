@@ -36,6 +36,7 @@ bna_local.db
 # IDEs
 .vscode/
 .idea/
+.cursor/
 *.swp
 *.swo
 *~

@@ -247,22 +247,76 @@ docker-compose exec backend bash
 docker-compose exec db psql -U postgres -d bna
 ```
 
-## Deploy (visão geral)
-- Backend: Uvicorn/Gunicorn atrás de Nginx
-- DB: Postgres gerenciado ou container dedicado com backup automático
-- Frontend: build do Vite servido por CDN/Nginx
-- Adminer: Opcional em produção (remover em ambientes sensíveis)
-- Variáveis de ambiente configuradas no ambiente de produção
-- Volumes persistentes para dados do PostgreSQL
+## 🌐 Deploy em Produção
 
-## 🔒 Segurança em Produção
+### 📚 Guias de Deploy Disponíveis
+
+**Para hospedar o site:**
+- 📖 **[QUICK_DEPLOY.md](QUICK_DEPLOY.md)** - Deploy em 5 minutos (Railway ou Render)
+- 📖 **[DEPLOY.md](DEPLOY.md)** - Guia completo para todas as plataformas
+
+### 🚀 Deploy Rápido (Railway - Recomendado)
+
+```bash
+# 1. Fazer commit das mudanças
+.\deploy.ps1  # Windows
+# ou
+./deploy.sh   # Linux/Mac
+
+# 2. Acessar Railway
+# https://railway.app
+
+# 3. Deploy from GitHub repo
+# Selecione o repositório BNA
+
+# 4. Configure variáveis de ambiente
+# OPENAI_API_KEY, SECRET_KEY, etc.
+
+# Pronto! 🎉
+```
+
+### 🏢 Plataformas Suportadas
+
+| Plataforma | Grátis | Facilidade | Docker | Recomendação |
+|------------|--------|-----------|---------|--------------|
+| Railway | ✅ ($5/mês) | ⭐⭐⭐⭐⭐ | ✅ | **Melhor para iniciar** |
+| Render | ✅ | ⭐⭐⭐⭐ | ✅ | Alternativa grátis |
+| Fly.io | ✅ | ⭐⭐⭐ | ✅ | Requer CLI |
+| DigitalOcean | ❌ ($5+) | ⭐⭐⭐⭐ | ✅ | Produção |
+
+### 🔒 Segurança em Produção
 
 **Importante antes de fazer deploy:**
-1. ✅ Altere a `SECRET_KEY` no `.env`
+1. ✅ Altere a `SECRET_KEY` no `.env` (use: `python -c "import secrets; print(secrets.token_urlsafe(32))"`)
 2. ✅ Use senhas fortes para o PostgreSQL
-3. ✅ Configure CORS adequadamente
+3. ✅ Configure CORS adequadamente para seu domínio
 4. ✅ Remova ou proteja o Adminer em produção
-5. ✅ Use HTTPS (SSL/TLS)
+5. ✅ Use HTTPS (SSL/TLS) - configurado automaticamente nas plataformas
 6. ✅ Configure backup automático do banco de dados
+7. ✅ Adicione rate limiting nas APIs
+8. ✅ Monitore logs e erros
+
+### 📊 Arquitetura em Produção
+- **Backend:** FastAPI + Uvicorn (containerizado)
+- **Database:** PostgreSQL gerenciado
+- **Frontend:** Build estático do Vite (CDN/Nginx)
+- **Storage:** Volumes persistentes para dados
+- **SSL/TLS:** Certificados automáticos (Let's Encrypt)
+- **Monitoring:** Logs centralizados + health checks
+
+### 💰 Custos Estimados
+
+**Desenvolvimento/MVP:**
+- Railway: $0-5/mês (crédito grátis)
+- Render: $0/mês (free tier)
+- OpenAI API: ~$5-20/mês (uso normal)
+
+**Produção (tráfego médio):**
+- Hospedagem: $10-25/mês
+- Database: $7-15/mês
+- OpenAI API: $50-200/mês
+- Total: **$70-240/mês**
+
+---
 
 Para o roteiro de entrevista, veja `PRESENTATION.md`.
