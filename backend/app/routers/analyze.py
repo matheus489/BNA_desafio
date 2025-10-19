@@ -10,8 +10,9 @@ from ..security import get_current_user_payload
 # Serviços de scraping e sumarização
 from ..services.scraper import fetch_url
 from ..services.llm import summarize_text
-from ..services.text_formatter import format_content_for_display, format_title, format_summary, format_key_points
+from ..services.text_formatter import format_content_for_display, format_title, format_summary, format_key_points, process_markdown_formatting
 from ..services.comparison import compare_companies
+from ..services.market_analysis import analyze_market_trends, generate_sales_strategy
 
 
 router = APIRouter()
@@ -31,6 +32,10 @@ async def analyze(request: schemas.AnalyzeRequest, db: Session = Depends(get_db)
 
     llm_out = await summarize_text(raw_text)
 
+    # Análise adicional de mercado e estratégia
+    market_analysis = await analyze_market_trends(llm_out.get("entities", {}))
+    sales_strategy = await generate_sales_strategy(llm_out.get("entities", {}))
+
     # Persiste resultado com deduplicação
     analysis = models.PageAnalysis(
         url=str(request.url),
@@ -38,7 +43,15 @@ async def analyze(request: schemas.AnalyzeRequest, db: Session = Depends(get_db)
         raw_text=raw_text,
         summary=llm_out.get("summary"),
         key_points=json.dumps(llm_out.get("key_points", [])),
-        entities=json.dumps(llm_out.get("entities", {})),
+        entities=json.dumps({
+            **llm_out.get("entities", {}),
+            "market_analysis": market_analysis,
+            "sales_strategy": sales_strategy,
+            "sentiment_analysis": llm_out.get("sentiment_analysis", {}),
+            "market_context": llm_out.get("market_context", {}),
+            "sales_insights": llm_out.get("sales_insights", {}),
+            "risk_assessment": llm_out.get("risk_assessment", {})
+        }),
         owner_id=int(user.get("sub")) if user else None,
     )
     db.add(analysis)
@@ -52,13 +65,17 @@ def _to_response(analysis: models.PageAnalysis) -> schemas.AnalyzeResponse:
     key_points = json.loads(analysis.key_points) if analysis.key_points else []
     entities = json.loads(analysis.entities) if analysis.entities else {}
     
+    # Processa formatação markdown
+    formatted_summary = process_markdown_formatting(analysis.summary)
+    formatted_key_points = [process_markdown_formatting(point) for point in key_points]
+    
     # Aplica formatação padronizada
     return schemas.AnalyzeResponse(
         id=analysis.id,
         url=analysis.url,
         title=format_title(analysis.title),
-        summary=format_summary(analysis.summary),
-        key_points=format_key_points(key_points),
+        summary=format_summary(formatted_summary),
+        key_points=format_key_points(formatted_key_points),
         entities=entities,
         created_at=analysis.created_at,
     )

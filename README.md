@@ -2,29 +2,51 @@
 
 Solução completa com RAG e IA para coletar, resumir e estruturar informações de páginas web, apoiando o time de vendas antes de reuniões.
 
-## 🚀 **NOVO: Features Avançadas para Vendas**
+---
 
-### **Chat RAG com Web Search Automático**
+## 🎯 **DESTAQUE: Features que Surpreendem**
+
+> **80% IA, 20% humano = 100% resultado** - Implementado em código!
+
+
+### **💪 Simulador de Objeções com IA** ⭐ NOVO
+Treine vendedores com IA gerando objeções contextualizadas:
+- 🎮 Gamificação com scores (0-100) e grades (A+ a F)
+- 🎯 3 níveis: Fácil, Médio, Difícil
+- 🤖 Avaliação automática com feedback detalhado
+- 📊 Estatísticas de progresso e evolução
+- 💡 Objeções específicas por empresa analisada
+
+**Acesse**: `/training` após login | **[Ver Demo](ROTEIRO_APRESENTACAO.md)**
+
+---
+
+## 🚀 **Features Principais**
+
+### **🤖 Chat RAG com Web Search Automático**
 **Chat RAG (Retrieval-Augmented Generation)** que combina:
 - 🔍 **Busca vetorial** no histórico de análises (embeddings semânticos)
 - 🌐 **Web Search automático** em tempo real (Google/DuckDuckGo)
 - 🤖 **GPT-4** para respostas contextualizadas e inteligentes
 - 💬 **Interface de chat** moderna e interativa
 
-**Exemplos de uso:**
-- "Qual o stack tecnológico da empresa X?"
-- "Quais empresas de IA já analisei?"
-- "Me dê informações sobre pricing de SaaS B2B"
+**Exemplos**: "Qual o stack tecnológico da empresa X?" | "Quais empresas de IA já analisei?"
 
-### **🔄 [NOVO] Comparação Inteligente entre Empresas**
+### **🔄 Comparação Inteligente entre Empresas**
 Selecione 2-5 empresas analisadas e receba:
 - ⚖️ **Comparação lado a lado** de stack, pricing e ICP
 - 🏆 **Ranking de prioridade** gerado por IA
 - 💡 **Oportunidades únicas** de cada empresa
 - 🎯 **Estratégia de abordagem** para o lead mais promissor
 
-**Por que isso importa:**
-Vendedores precisam priorizar leads. Essa feature usa IA para identificar automaticamente qual empresa tem maior fit e deve ser abordada primeiro.
+### **📊 Análise de Sites com IA**
+- Scraping inteligente e extração de conteúdo
+- Análise focada em vendas B2B (ICP, produtos, pricing, stack)
+- Cache por URL (nunca reprocessa a mesma empresa)
+- Exportação CSV para Google Sheets
+
+### **📝 Relatórios Detalhados**
+Gere relatórios executivos expandidos com insights profundos de mercado, oportunidades e estratégias de abordagem.
 
 ## Arquitetura
 - Backend: FastAPI (Python), SQLAlchemy (PostgreSQL), JWT, serviços de scraping, LLM e RAG
@@ -330,4 +352,50 @@ docker-compose exec db psql -U postgres -d bna
 
 ---
 
-Para o roteiro de entrevista, veja `PRESENTATION.md`.
+## 📚 Documentação Completa
+
+### Para Desenvolvimento
+- **[RESUMO_TECNICO.md](RESUMO_TECNICO.md)** - Arquitetura detalhada, modelo de dados, endpoints
+- **[README.md](README.md)** - Este arquivo (setup e uso básico)
+
+### Para Apresentação
+- **[IMPLEMENTACAO_COMPLETA.md](IMPLEMENTACAO_COMPLETA.md)** - Resumo executivo de tudo que foi entregue ⭐
+- **[ROTEIRO_APRESENTACAO.md](ROTEIRO_APRESENTACAO.md)** - Script completo de apresentação (30min) ⭐
+- **[NOVAS_FEATURES.md](NOVAS_FEATURES.md)** - Documentação técnica das 2 features novas ⭐
+
+### Para Instalação
+- **[chrome-extension/COMO_INSTALAR.md](chrome-extension/COMO_INSTALAR.md)** - Guia de instalação da extensão
+- **[chrome-extension/README.md](chrome-extension/README.md)** - Documentação técnica da extensão
+
+### Início Rápido
+1. Leia **[IMPLEMENTACAO_COMPLETA.md](IMPLEMENTACAO_COMPLETA.md)** para visão geral
+2. Siga **[ROTEIRO_APRESENTACAO.md](ROTEIRO_APRESENTACAO.md)** para preparar apresentação
+3. Instale extensão com **[COMO_INSTALAR.md](chrome-extension/COMO_INSTALAR.md)**
+4. Execute os testes descritos em **[NOVAS_FEATURES.md](NOVAS_FEATURES.md)**
+
+---
+
+## 🎯 Case BNA - Status
+
+✅ **Requisitos Básicos**: 100% Completo
+- [x] API que recebe links e retorna informações
+- [x] Cache em DB (não rescrapeia)
+- [x] UI para equipe de vendas
+- [x] Autenticação na UI
+
+🚀 **Além do Esperado**: 2 Features Revolucionárias
+- [x] **Chrome Extension** - Análise com 1 clique do navegador
+- [x] **Simulador de Objeções** - Treinamento gamificado com IA
+- [x] Chat RAG com busca vetorial
+- [x] Comparação de empresas
+- [x] Relatórios detalhados
+- [x] Exportação CSV/Sheets
+- [x] Interface Admin
+- [x] Docker Compose completo
+
+📊 **Resultado**: Não é uma API. É uma **plataforma completa** de inteligência para vendas.
+
+---
+
+**Desenvolvido com** ❤️ **para BNA.dev**
+> "80% IA, 20% humano = 100% resultado" - Implementado em código!

@@ -37,6 +37,37 @@ def normalize_text(text: Optional[str]) -> str:
     return text.strip()
 
 
+def process_markdown_formatting(text: Optional[str]) -> str:
+    """
+    Processa formatação markdown para exibição correta.
+    
+    Args:
+        text: Texto com markdown para processar
+        
+    Returns:
+        Texto com formatação processada
+    """
+    if not text:
+        return ""
+    
+    # Converte **texto** para <strong>texto</strong>
+    text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
+    
+    # Converte *texto* para <em>texto</em>
+    text = re.sub(r'\*(.*?)\*', r'<em>\1</em>', text)
+    
+    # Converte ## Título para <h2>Título</h2>
+    text = re.sub(r'^## (.*?)$', r'<h2>\1</h2>', text, flags=re.MULTILINE)
+    
+    # Converte ### Título para <h3>Título</h3>
+    text = re.sub(r'^### (.*?)$', r'<h3>\1</h3>', text, flags=re.MULTILINE)
+    
+    # Converte - item para <li>item</li>
+    text = re.sub(r'^- (.*?)$', r'<li>\1</li>', text, flags=re.MULTILINE)
+    
+    return text
+
+
 def format_summary(summary: Optional[str]) -> str:
     """
     Formata um resumo para exibição padronizada.

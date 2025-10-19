@@ -438,7 +438,7 @@ export function Chat() {
                       }
                     }}
                   >
-                    {msg.content}
+                    <div dangerouslySetInnerHTML={{ __html: msg.content }} />
                     <button
                       className="copy-button"
                       style={{

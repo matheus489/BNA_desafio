@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Configurações da aplicação (variáveis de ambiente, CORS, etc.)
 from .config import settings
 # Rotas principais da API
-from .routers import auth, analyze, history, admin, chat, reports
+from .routers import auth, analyze, history, admin, chat, reports, training
 
 
 # Instância principal do FastAPI
@@ -39,5 +39,6 @@ app.include_router(history.router, prefix="/history", tags=["history"])
 app.include_router(admin.router, prefix="/admin", tags=["admin"])
 app.include_router(chat.router, prefix="/chat", tags=["chat"])
 app.include_router(reports.router, prefix="/reports", tags=["reports"])
+app.include_router(training.router)  # Já tem prefix="/training" definido no router
 
 

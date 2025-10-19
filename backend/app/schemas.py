@@ -90,3 +90,84 @@ class ChatHistoryItem(BaseModel):
         orm_mode = True
 
 
+# ========== Schemas para Simulador de Objeções ==========
+
+class ObjectionItem(BaseModel):
+    """Item de objeção individual."""
+    id: int
+    objection: str
+    type: str
+    difficulty: str
+    hint: str
+    suggested_response: str
+    context: str
+
+
+class GenerateObjectionsRequest(BaseModel):
+    """Requisição para gerar objeções."""
+    analysis_id: int
+    difficulty: str = "medium"  # easy, medium, hard
+
+
+class GenerateObjectionsResponse(BaseModel):
+    """Resposta com objeções geradas."""
+    objections: List[ObjectionItem]
+    company_context: str
+    overall_strategy: str
+
+
+class SubmitResponseRequest(BaseModel):
+    """Requisição para submeter resposta a uma objeção."""
+    objection: str
+    objection_type: str
+    user_response: str
+    suggested_response: str
+    company_context: str
+    analysis_id: Optional[int] = None
+    difficulty: str = "medium"
+
+
+class ResponseEvaluation(BaseModel):
+    """Avaliação da resposta do usuário."""
+    score: int  # 0-100
+    grade: str  # A+, A, B+, B, C+, C, D, F
+    strengths: List[str]
+    weaknesses: List[str]
+    improvements: List[str]
+    tone_analysis: str
+    overall_feedback: str
+
+
+class SubmitResponseResponse(BaseModel):
+    """Resposta da avaliação."""
+    evaluation: ResponseEvaluation
+    session_id: int  # ID da sessão de treinamento salva
+
+
+class TrainingSessionOut(BaseModel):
+    """Saída de uma sessão de treinamento."""
+    id: int
+    analysis_id: Optional[int]
+    difficulty: str
+    objection: str
+    objection_type: Optional[str]
+    user_response: str
+    suggested_response: Optional[str]
+    evaluation: Optional[Dict[str, Any]]
+    score: Optional[int]
+    created_at: datetime
+    
+    class Config:
+        orm_mode = True
+
+
+class TrainingStatsResponse(BaseModel):
+    """Estatísticas de treinamento do usuário."""
+    total_sessions: int
+    average_score: float
+    sessions_by_difficulty: Dict[str, int]
+    sessions_by_type: Dict[str, int]
+    recent_sessions: List[TrainingSessionOut]
+    improvement_trend: List[Dict[str, Any]]  # Score ao longo do tempo
+
+

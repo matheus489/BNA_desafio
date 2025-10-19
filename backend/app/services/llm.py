@@ -2,51 +2,90 @@ from typing import List, Dict, Any
 import json
 from ..config import settings
 
-SUMMARY_PROMPT = """Você é um assistente especializado em análise de empresas para discovery de vendas.
+SUMMARY_PROMPT = """Você é um especialista em análise de empresas para vendas B2B com 15+ anos de experiência. 
 
 Analise o texto fornecido e extraia informações estruturadas seguindo EXATAMENTE este formato:
 
 ## RESUMO EXECUTIVO
-[Resumo conciso de 120-200 palavras sobre a empresa, seus produtos/serviços e proposta de valor]
+[Resumo executivo de 150-250 palavras sobre a empresa, incluindo: proposta de valor única, mercado de atuação, diferenciação competitiva e potencial de vendas]
 
-## INFORMAÇÕES PRINCIPAIS
+## ANÁLISE ESTRATÉGICA
 
 ### 🎯 ICP (Ideal Customer Profile)
-[Descrição do perfil ideal de cliente da empresa]
+**Tamanho da Empresa:** [Startup/PME/Enterprise]
+**Setor:** [Setor específico]
+**Perfil Técnico:** [Nível de maturidade tecnológica]
+**Pain Points:** [Principais dores identificadas]
+**Budget Range:** [Faixa de investimento estimada]
 
 ### 🛍️ PRODUTOS/SERVIÇOS
-[Lista dos principais produtos ou serviços oferecidos]
+**Core Products:** [Produtos principais com descrição]
+**Value Proposition:** [Proposta de valor única]
+**Competitive Advantage:** [Vantagens competitivas]
+**Market Position:** [Posição no mercado]
 
-### 💰 PRICING
-[Informações sobre preços, planos ou modelo de cobrança]
+### 💰 PRICING & BUSINESS MODEL
+**Pricing Strategy:** [Estratégia de preços identificada]
+**Business Model:** [Modelo de negócio]
+**Revenue Streams:** [Fontes de receita]
+**Target Market:** [Mercado-alvo específico]
 
 ### 🔧 STACK TECNOLÓGICO
-[Tecnologias, linguagens, frameworks ou ferramentas utilizadas]
+**Core Technologies:** [Tecnologias principais]
+**Infrastructure:** [Infraestrutura tecnológica]
+**Integration Capabilities:** [Capacidades de integração]
+**Security Level:** [Nível de segurança/compliance]
 
-### 📞 CONTATOS
-[Informações de contato disponíveis - emails, telefones, endereços]
-
-### 🏢 SOBRE A EMPRESA
-[Informações sobre a empresa: tamanho, localização, mercado, etc.]
+### 📊 ANÁLISE DE MERCADO
+**Market Size:** [Tamanho do mercado]
+**Growth Stage:** [Estágio de crescimento]
+**Competition Level:** [Nível de competição]
+**Market Trends:** [Tendências do mercado]
 
 ### 🎯 OPORTUNIDADES DE VENDAS
-[Insights sobre como abordar esta empresa, pain points identificados, etc.]
+**Sales Approach:** [Estratégia de abordagem recomendada]
+**Key Decision Makers:** [Tomadores de decisão identificados]
+**Sales Cycle:** [Ciclo de vendas estimado]
+**Success Factors:** [Fatores de sucesso para fechamento]
+**Risk Factors:** [Fatores de risco identificados]
+
+### 💡 INSIGHTS ESTRATÉGICOS
+**Unique Selling Points:** [Pontos únicos de venda]
+**Competitive Threats:** [Ameaças competitivas]
+**Partnership Opportunities:** [Oportunidades de parceria]
+**Expansion Potential:** [Potencial de expansão]
 
 ## ENTIDADES ESTRUTURADAS
 {{
   "company_name": "[Nome da empresa]",
+  "industry": "[Setor/indústria]",
+  "company_size": "[Tamanho da empresa]",
   "products": ["[produto1]", "[produto2]"],
-  "pricing": "[Informações de preço]",
+  "pricing_model": "[Modelo de preços]",
   "tech_stack": ["[tecnologia1]", "[tecnologia2]"],
-  "contacts": ["[contato1]", "[contato2]"]
+  "contacts": ["[contato1]", "[contato2]"],
+  "market_position": "[Posição no mercado]",
+  "growth_stage": "[Estágio de crescimento]",
+  "sales_potential": "[Potencial de vendas: Alto/Médio/Baixo]",
+  "decision_makers": ["[cargo1]", "[cargo2]"],
+  "pain_points": ["[dor1]", "[dor2]"],
+  "competitors": ["[concorrente1]", "[concorrente2]"],
+  "partnership_potential": "[Potencial de parceria: Alto/Médio/Baixo]"
 }}
 
+## SCORE DE PRIORIDADE
+**Sales Priority:** [1-10] - Justificativa: [Por que esta empresa é prioridade]
+**Budget Potential:** [1-10] - Justificativa: [Potencial de investimento]
+**Timing:** [1-10] - Justificativa: [Urgência/timing da oportunidade]
+**Fit Score:** [1-10] - Justificativa: [Fit com nosso produto/serviço]
+
 IMPORTANTE: 
-- Use formatação markdown consistente
-- Seja específico e factual
-- Foque em informações úteis para vendas
-- Se alguma informação não estiver disponível, escreva "Não especificado"
-- Mantenha o tom profissional e objetivo"""
+- Seja extremamente específico e factual
+- Use dados concretos quando disponíveis
+- Foque em insights acionáveis para vendas
+- Se alguma informação não estiver disponível, escreva "Não identificado"
+- Mantenha tom consultivo e estratégico
+- Priorize informações que impactam diretamente o processo de vendas"""
 
 
 async def summarize_text(raw_text: str) -> Dict[str, Any]:
@@ -58,19 +97,98 @@ async def summarize_text(raw_text: str) -> Dict[str, Any]:
             raise RuntimeError("openai package not installed")
 
         openai.api_key = settings.OPENAI_API_KEY
+        
+        # Análise principal
         content = (
-            f"{SUMMARY_PROMPT}\n\nTEXTO:\n" + raw_text[:6000]
+            f"{SUMMARY_PROMPT}\n\nTEXTO:\n" + raw_text[:8000]  # Aumentado limite
         )
         resp = await openai.ChatCompletion.acreate(
             model=settings.OPENAI_MODEL,
             messages=[{"role": "user", "content": content}],
-            temperature=0.2,
+            temperature=0.1,  # Mais determinístico
         )
         text = resp["choices"][0]["message"]["content"]
-        return _parse_output(text)
+        
+        # Análise adicional de sentiment e contexto
+        sentiment_analysis = await _analyze_sentiment_and_context(raw_text)
+        
+        result = _parse_output(text)
+        result.update(sentiment_analysis)
+        return result
 
     # Fallback de resumo inteligente se não houver provider/chave
     return _extract_mock_analysis(raw_text)
+
+
+async def _analyze_sentiment_and_context(raw_text: str) -> Dict[str, Any]:
+    """Análise adicional de sentiment e contexto para insights mais profundos."""
+    try:
+        import openai  # type: ignore
+        
+        sentiment_prompt = f"""
+        Analise o texto da empresa e forneça insights adicionais em formato JSON:
+        
+        {{
+            "sentiment_analysis": {{
+                "overall_tone": "[Positivo/Neutro/Negativo]",
+                "confidence_level": "[Alto/Médio/Baixo]",
+                "key_emotions": ["[emoção1]", "[emoção2]"],
+                "brand_perception": "[Como a empresa se posiciona]"
+            }},
+            "market_context": {{
+                "industry_trends": "[Tendências do setor identificadas]",
+                "competitive_landscape": "[Posição competitiva]",
+                "market_maturity": "[Mercado: Emergente/Estabelecido/Declínio]",
+                "innovation_level": "[Nível de inovação: Alto/Médio/Baixo]"
+            }},
+            "sales_insights": {{
+                "urgency_indicators": ["[indicador1]", "[indicador2]"],
+                "budget_signals": "[Sinais de orçamento disponível]",
+                "decision_timeline": "[Timeline estimado para decisão]",
+                "stakeholder_complexity": "[Complexidade dos stakeholders]"
+            }},
+            "risk_assessment": {{
+                "business_risks": ["[risco1]", "[risco2]"],
+                "market_risks": ["[risco1]", "[risco2]"],
+                "technology_risks": ["[risco1]", "[risco2]"],
+                "overall_risk_level": "[Alto/Médio/Baixo]"
+            }}
+        }}
+        
+        TEXTO: {raw_text[:4000]}
+        """
+        
+        resp = await openai.ChatCompletion.acreate(
+            model=settings.OPENAI_MODEL,
+            messages=[{"role": "user", "content": sentiment_prompt}],
+            temperature=0.3,
+        )
+        
+        sentiment_text = resp["choices"][0]["message"]["content"]
+        
+        # Tenta extrair JSON
+        try:
+            import re
+            json_match = re.search(r'\{.*\}', sentiment_text, re.DOTALL)
+            if json_match:
+                return json.loads(json_match.group())
+        except:
+            pass
+            
+        return {
+            "sentiment_analysis": {"overall_tone": "Neutro", "confidence_level": "Médio"},
+            "market_context": {"industry_trends": "Não identificado"},
+            "sales_insights": {"urgency_indicators": []},
+            "risk_assessment": {"overall_risk_level": "Médio"}
+        }
+        
+    except Exception:
+        return {
+            "sentiment_analysis": {"overall_tone": "Neutro", "confidence_level": "Médio"},
+            "market_context": {"industry_trends": "Não identificado"},
+            "sales_insights": {"urgency_indicators": []},
+            "risk_assessment": {"overall_risk_level": "Médio"}
+        }
 
 
 def _parse_output(text: str) -> Dict[str, Any]:
@@ -106,11 +224,12 @@ def _parse_output(text: str) -> Dict[str, Any]:
     sections_to_extract = [
         "🎯 ICP (Ideal Customer Profile)",
         "🛍️ PRODUTOS/SERVIÇOS", 
-        "💰 PRICING",
+        "💰 PRICING & BUSINESS MODEL",
         "🔧 STACK TECNOLÓGICO",
-        "📞 CONTATOS",
-        "🏢 SOBRE A EMPRESA",
-        "🎯 OPORTUNIDADES DE VENDAS"
+        "📊 ANÁLISE DE MERCADO",
+        "🎯 OPORTUNIDADES DE VENDAS",
+        "💡 INSIGHTS ESTRATÉGICOS",
+        "SCORE DE PRIORIDADE"
     ]
     
     for section in sections_to_extract:

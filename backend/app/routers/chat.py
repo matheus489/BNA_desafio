@@ -17,6 +17,7 @@ from ..database import get_db
 from ..security import get_current_user_payload
 from ..services.embeddings import find_similar_analyses
 from ..services.web_search import enriched_search
+from ..services.text_formatter import process_markdown_formatting
 from ..config import settings
 
 
@@ -41,7 +42,7 @@ async def chat(
     """
     user_id = int(user.get("sub"))
     
-    # ===== 1. RAG: Busca vetorial no histórico =====
+    # ===== 1. RAG SIMPLIFICADO: Busca análises relevantes =====
     all_analyses = db.query(models.PageAnalysis).all()
     analyses_data = [
         {
@@ -56,6 +57,7 @@ async def chat(
         for a in all_analyses
     ]
     
+    # Busca análises similares (método tradicional mais rápido)
     similar_analyses = await find_similar_analyses(
         request.message,
         analyses_data,
@@ -67,7 +69,7 @@ async def chat(
     if request.use_web_search:
         enriched = await enriched_search(
             request.message,
-            scrape_top_results=True  # Faz scraping dos top 2 resultados
+            scrape_top_results=True
         )
         web_results = enriched.get('results', [])
         scraped_content = enriched.get('scraped_content', [])
@@ -135,7 +137,10 @@ async def chat(
         conversation_history=conversation_history
     )
     
-    # ===== 7. Prepara fontes usadas =====
+    # ===== 7. Processa formatação markdown =====
+    formatted_response = process_markdown_formatting(response_text)
+    
+    # ===== 8. Prepara fontes usadas =====
     sources = []
     
     # Adiciona análises como fontes
@@ -156,7 +161,7 @@ async def chat(
             snippet=result['snippet']
         ))
     
-    # ===== 8. Salva no histórico do banco =====
+    # ===== 9. Salva no histórico do banco =====
     sources_json = json.dumps([s.dict() for s in sources])
     
     # Salva pergunta do usuário
@@ -172,15 +177,15 @@ async def chat(
     assistant_msg = models.ChatMessage(
         user_id=user_id,
         role='assistant',
-        content=response_text,
+        content=formatted_response,
         sources=sources_json
     )
     db.add(assistant_msg)
     db.commit()
     
-    # ===== 9. Retorna resposta =====
+    # ===== 10. Retorna resposta =====
     return schemas.ChatResponse(
-        message=response_text,
+        message=formatted_response,
         sources=sources,
         timestamp=datetime.utcnow()
     )
@@ -257,7 +262,6 @@ async def generate_rag_response(
     """
     try:
         import openai
-        openai.api_key = settings.OPENAI_API_KEY
         
         system_prompt = """Você é um assistente de vendas inteligente da BNA.dev.
 

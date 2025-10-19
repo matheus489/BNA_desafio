@@ -15,6 +15,8 @@ class User(Base):
 
     # Relacionamento: um usuário pode ter várias análises
     analyses = relationship("PageAnalysis", back_populates="owner")
+    # Relacionamento: um usuário pode ter várias sessões de treinamento
+    training_sessions = relationship("TrainingSession", back_populates="user")
 
 
 class PageAnalysis(Base):
@@ -50,5 +52,26 @@ class ChatMessage(Base):
 
     # Relacionamento com usuário
     user = relationship("User")
+
+
+class TrainingSession(Base):
+    """Sessões de treinamento do simulador de objeções"""
+    __tablename__ = "training_sessions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    analysis_id = Column(Integer, ForeignKey("page_analyses.id"), nullable=True)  # Empresa relacionada
+    difficulty = Column(String(20), nullable=False)  # easy, medium, hard
+    objection = Column(Text, nullable=False)  # A objeção apresentada
+    objection_type = Column(String(50), nullable=True)  # preço, timing, concorrência, etc
+    user_response = Column(Text, nullable=False)  # Resposta do usuário
+    suggested_response = Column(Text, nullable=True)  # Resposta sugerida
+    evaluation = Column(Text, nullable=True)  # JSON com avaliação (score, feedback, etc)
+    score = Column(Integer, nullable=True)  # 0-100
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    # Relacionamentos
+    user = relationship("User", back_populates="training_sessions")
+    analysis = relationship("PageAnalysis")
 
 

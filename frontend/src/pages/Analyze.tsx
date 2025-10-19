@@ -380,7 +380,7 @@ export function Analyze() {
               border: '1px solid rgba(255, 255, 255, 0.1)',
               lineHeight: '1.9'
             }}>
-              {result.summary || 'Resumo não disponível.'}
+              <div dangerouslySetInnerHTML={{ __html: result.summary || 'Resumo não disponível.' }} />
             </div>
           </div>
 
@@ -464,14 +464,15 @@ export function Analyze() {
                             {copiedItems.has(`keypoint-${i}`) ? '✅' : '📋'}
                           </button>
                         </div>
-                        <div style={{
-                          color: 'rgba(255, 255, 255, 0.8)',
-                          lineHeight: '1.7',
-                          whiteSpace: 'pre-wrap',
-                          fontSize: '0.98rem'
-                        }}>
-                          {content}
-                        </div>
+                        <div 
+                          style={{
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            lineHeight: '1.7',
+                            whiteSpace: 'pre-wrap',
+                            fontSize: '0.98rem'
+                          }}
+                          dangerouslySetInnerHTML={{ __html: content }}
+                        />
                       </div>
                     );
                   }

@@ -212,6 +212,23 @@ export function App() {
               📋 Histórico
             </Link>
             
+            <Link 
+              to="/training" 
+              style={linkStyles} 
+              onMouseOver={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(102, 126, 234, 0.3)'
+                ;(e.target as HTMLElement).style.transform = 'translateY(-2px)'
+                ;(e.target as HTMLElement).style.borderColor = 'rgba(102, 126, 234, 0.5)'
+              }} 
+              onMouseOut={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.05)'
+                ;(e.target as HTMLElement).style.transform = 'translateY(0)'
+                ;(e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.1)'
+              }}
+            >
+              🎯 Treinar
+            </Link>
+            
             {token && role === 'admin' && (
               <Link 
                 to="/admin" 
