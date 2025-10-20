@@ -355,8 +355,7 @@ export function Chat() {
     top: '0.75rem',
     right: '0.75rem',
     opacity: 0,
-    transform: 'translateY(-5px)',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+    transform: 'translateY(-5px)'
   }
 
   if (loadingHistory) {

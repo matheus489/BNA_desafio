@@ -32,11 +32,20 @@ class PageAnalysis(Base):
     summary = Column(Text, nullable=True)
     key_points = Column(Text, nullable=True)  # Armazenado como JSON (string) de lista
     entities = Column(Text, nullable=True)    # Armazenado como JSON (string) de dicionário
+    stage = Column(String(50), default='lead', nullable=False)  # Pipeline stage
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     # Relacionamento com o dono (usuário que solicitou a análise)
     owner = relationship("User", back_populates="analyses")
+    
+    # Vendedor atribuído ao card
+    seller_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    seller = relationship("User", foreign_keys=[seller_id], backref="assigned_analyses")
+    
+    # Relacionamento com notas e anexos
+    notes = relationship("AnalysisNote", back_populates="analysis", cascade="all, delete-orphan")
+    attachments = relationship("AnalysisAttachment", back_populates="analysis", cascade="all, delete-orphan")
 
 
 class ChatMessage(Base):
@@ -75,3 +84,35 @@ class TrainingSession(Base):
     analysis = relationship("PageAnalysis")
 
 
+class AnalysisNote(Base):
+    """Notas/anotações sobre análises no Kanban"""
+    __tablename__ = "analysis_notes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    analysis_id = Column(Integer, ForeignKey("page_analyses.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    # Relacionamentos
+    analysis = relationship("PageAnalysis", back_populates="notes")
+    user = relationship("User")
+
+
+class AnalysisAttachment(Base):
+    """Anexos das análises no Kanban"""
+    __tablename__ = "analysis_attachments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    analysis_id = Column(Integer, ForeignKey("page_analyses.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    filename = Column(String(255), nullable=False)
+    file_url = Column(Text, nullable=False)  # URL ou path do arquivo
+    file_type = Column(String(100), nullable=True)
+    file_size = Column(Integer, nullable=True)  # Tamanho em bytes
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    # Relacionamentos
+    analysis = relationship("PageAnalysis", back_populates="attachments")
+    user = relationship("User")

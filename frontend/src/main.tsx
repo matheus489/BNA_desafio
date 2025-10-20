@@ -8,6 +8,9 @@ import { Chat } from './pages/Chat'
 import { Compare } from './pages/Compare'
 import { Admin } from './pages/Admin'
 import { History } from './pages/History'
+import { Dashboard } from './pages/Dashboard'
+import { Kanban } from './pages/Kanban'
+import { Settings } from './pages/Settings'
 import Training from './pages/Training'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -15,13 +18,16 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}> 
-          <Route index element={<Navigate to="/analyze" replace />} />
+          <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/kanban" element={<Kanban />} />
           <Route path="/analyze" element={<Analyze />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/compare" element={<Compare />} />
           <Route path="/history" element={<History />} />
           <Route path="/training" element={<Training />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/admin" element={localStorage.getItem('role') === 'admin' ? <Admin /> : <Navigate to="/login" replace />} />
         </Route>
       </Routes>

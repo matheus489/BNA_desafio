@@ -48,6 +48,39 @@ Selecione 2-5 empresas analisadas e receba:
 ### **📝 Relatórios Detalhados**
 Gere relatórios executivos expandidos com insights profundos de mercado, oportunidades e estratégias de abordagem.
 
+### **🌐 Enriquecimento Multi-Fonte** ⭐ NOVO
+Sistema automático que busca dados de múltiplas fontes para criar perfil 360° da empresa:
+- 📊 **Crunchbase**: Funding, investimentos, valuation
+- 💻 **GitHub**: Tech stack real, atividade open-source
+- 👔 **LinkedIn**: Company data, headcount
+- 📰 **News API**: Notícias recentes e menções na mídia
+- ⭐ **G2/Capterra**: Reviews e ratings de produtos
+- 🤖 **Síntese por IA**: LLM consolida tudo em perfil executivo unificado
+
+**Como usar**: POST `/enrichment/analyze/{analysis_id}` | Economiza 30-45min de research manual
+
+### **📊 Dashboard Executivo com IA** ⭐ NOVO
+Visão consolidada em tempo real com insights gerados por IA:
+- 📈 **4 KPIs principais** com trends (Total Leads, Hot Leads, Análises/mês, Deal Score)
+- 🤖 **Insights de IA automáticos** (3-4 insights acionáveis baseados nos dados)
+- 📊 **Pipeline distribution** (visualização em pizza chart)
+- 📈 **Tendências semanais** (gráfico de linha das últimas 8 semanas)
+- 🏆 **Top 5 leads da semana** com scoring automático
+- 📋 **Activity timeline** (últimas 15 atividades)
+- 🔄 **Auto-refresh** a cada 2 minutos
+
+**Como usar**: GET `/dashboard` | Frontend: `<Dashboard />` component
+
+### **📋 Kanban Board para Pipeline** ⭐ NOVO
+Gestão visual de pipeline de vendas com drag-and-drop:
+- 🎯 **5 estágios**: Lead → Qualificado → Proposta → Negociação → Fechado
+- 🖱️ **Drag-and-drop** para mover leads entre estágios
+- 🤖 **Sugestões de IA** por estágio (próximas ações recomendadas)
+- 📊 **Estatísticas do pipeline** (conversão por estágio, tempo médio)
+- 🔄 **Bulk update** (atualiza múltiplos leads de uma vez)
+
+**Como usar**: GET `/kanban/pipeline` | PATCH `/kanban/analysis/{id}/stage`
+
 ## Arquitetura
 - Backend: FastAPI (Python), SQLAlchemy (PostgreSQL), JWT, serviços de scraping, LLM e RAG
 - Banco: PostgreSQL (Docker Compose)

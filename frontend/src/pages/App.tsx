@@ -145,6 +145,40 @@ export function App() {
           
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <Link 
+              to="/dashboard" 
+              style={linkStyles} 
+              onMouseOver={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(102, 126, 234, 0.3)'
+                ;(e.target as HTMLElement).style.transform = 'translateY(-2px)'
+                ;(e.target as HTMLElement).style.borderColor = 'rgba(102, 126, 234, 0.5)'
+              }} 
+              onMouseOut={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.05)'
+                ;(e.target as HTMLElement).style.transform = 'translateY(0)'
+                ;(e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.1)'
+              }}
+            >
+              📊 Dashboard
+            </Link>
+            
+            <Link 
+              to="/kanban" 
+              style={linkStyles} 
+              onMouseOver={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(102, 126, 234, 0.3)'
+                ;(e.target as HTMLElement).style.transform = 'translateY(-2px)'
+                ;(e.target as HTMLElement).style.borderColor = 'rgba(102, 126, 234, 0.5)'
+              }} 
+              onMouseOut={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.05)'
+                ;(e.target as HTMLElement).style.transform = 'translateY(0)'
+                ;(e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.1)'
+              }}
+            >
+              📋 Pipeline
+            </Link>
+            
+            <Link 
               to="/analyze" 
               style={linkStyles} 
               onMouseOver={(e) => {
@@ -248,6 +282,23 @@ export function App() {
               </Link>
             )}
             
+            <Link 
+              to="/settings" 
+              style={linkStyles} 
+              onMouseOver={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(102, 126, 234, 0.3)'
+                ;(e.target as HTMLElement).style.transform = 'translateY(-2px)'
+                ;(e.target as HTMLElement).style.borderColor = 'rgba(102, 126, 234, 0.5)'
+              }} 
+              onMouseOut={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.05)'
+                ;(e.target as HTMLElement).style.transform = 'translateY(0)'
+                ;(e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.1)'
+              }}
+            >
+              ⚙️ Configurações
+            </Link>
+            
             {token ? (
               <>
                 <button 
@@ -313,6 +364,7 @@ export function App() {
       <main style={mainStyles}>
         <Outlet />
       </main>
+      
     </div>
   )
 }
