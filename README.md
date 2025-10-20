@@ -1131,8 +1131,6 @@ Start Command: docker-compose up backend
 ### Documentação de Entregas
 
 - **[ENTREGA_FINAL_RESUMO.md](ENTREGA_FINAL_RESUMO.md)** - Resumo executivo da entrega
-- **[ANALISE_MELHORIAS_EXTRAORDINARIAS.md](ANALISE_MELHORIAS_EXTRAORDINARIAS.md)** - Features avançadas
-- **[RAG_IMPLEMENTADO.txt](RAG_IMPLEMENTADO.txt)** - Detalhes da implementação RAG
 
 ### Swagger UI Interativo
 
@@ -1147,34 +1145,6 @@ Acesse http://localhost:8000/docs para:
 Documentação alternativa: http://localhost:8000/redoc
 
 ---
-
-## 🤝 Contribuição
-
-Contribuições são bem-vindas! Este é um projeto em constante evolução.
-
-### Como Contribuir
-
-```bash
-# 1. Fork o repositório
-# Clique em "Fork" no GitHub
-
-# 2. Clone seu fork
-git clone https://github.com/seu-usuario/bna.git
-cd bna
-
-# 3. Crie uma branch para sua feature
-git checkout -b feature/minha-nova-feature
-
-# 4. Faça suas alterações e commit
-git add .
-git commit -m "feat: adiciona nova funcionalidade X"
-
-# 5. Push para seu fork
-git push origin feature/minha-nova-feature
-
-# 6. Abra um Pull Request
-# No GitHub, clique em "New Pull Request"
-```
 
 ### Padrões de Commit
 
@@ -1326,7 +1296,7 @@ Para reportar bugs, abra uma [issue no GitHub](https://github.com/seu-usuario/bn
 
 ### Solicitar Features
 
-Para solicitar novas funcionalidades, abra uma [issue no GitHub](https://github.com/seu-usuario/bna/issues) com:
+Para solicitar novas funcionalidades, abra uma [issue no GitHub](https://github.com/matheus489/bna/issues) com:
 
 1. **Descrição da feature**
 2. **Caso de uso**
@@ -1364,15 +1334,6 @@ SOFTWARE.
 ```
 
 ---
-
-## 👥 Autores e Créditos
-
-### Desenvolvedor Principal
-
-**BNA.dev Team**
-- 🌐 Website: [bna.dev](https://bna.dev)
-- 📧 Email: contato@bna.dev
-- 💼 LinkedIn: [BNA.dev](https://linkedin.com/company/bna-dev)
 
 ### Tecnologias e Bibliotecas
 
