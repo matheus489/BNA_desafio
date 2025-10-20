@@ -255,7 +255,7 @@ A forma mais rápida e confiável de executar toda a stack:
 #### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/bna.git
+git clone https://github.com/matheus489/bna.git
 cd bna
 ```
 
@@ -329,7 +329,7 @@ Para desenvolvimento com hot reload e debugging:
 #### 1. Clone e configure
 
 ```bash
-git clone https://github.com/seu-usuario/bna.git
+git clone https://github.com/matheus489/bna.git
 cd bna
 cp config.env.example .env
 ```
