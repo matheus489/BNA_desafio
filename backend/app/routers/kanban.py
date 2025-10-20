@@ -106,10 +106,12 @@ async def update_analysis_stage(
             detail=f"Estágio inválido. Use um de: {', '.join(VALID_STAGES)}"
         )
     
-    # Busca análise
+    # Busca análise (permite owner ou seller)
     analysis = db.query(models.PageAnalysis).filter(
-        models.PageAnalysis.id == analysis_id,
-        models.PageAnalysis.owner_id == user_id
+        models.PageAnalysis.id == analysis_id
+    ).filter(
+        (models.PageAnalysis.owner_id == user_id) | 
+        (models.PageAnalysis.seller_id == user_id)
     ).first()
     
     if not analysis:
@@ -360,6 +362,7 @@ async def get_analysis_details(
         "key_points": key_points,
         "entities": entities,
         "stage": analysis.stage,
+        "seller_id": analysis.seller_id,
         "created_at": analysis.created_at.isoformat(),
         "notes": [
             {
@@ -398,10 +401,12 @@ async def create_note(
     """
     user_id = int(user.get("sub"))
     
-    # Verifica se a análise existe e pertence ao usuário
+    # Verifica se a análise existe e pertence ao usuário (owner ou seller)
     analysis = db.query(models.PageAnalysis).filter(
-        models.PageAnalysis.id == analysis_id,
-        models.PageAnalysis.owner_id == user_id
+        models.PageAnalysis.id == analysis_id
+    ).filter(
+        (models.PageAnalysis.owner_id == user_id) | 
+        (models.PageAnalysis.seller_id == user_id)
     ).first()
     
     if not analysis:
@@ -501,10 +506,12 @@ async def create_attachment(
     """
     user_id = int(user.get("sub"))
     
-    # Verifica se a análise existe e pertence ao usuário
+    # Verifica se a análise existe e pertence ao usuário (owner ou seller)
     analysis = db.query(models.PageAnalysis).filter(
-        models.PageAnalysis.id == analysis_id,
-        models.PageAnalysis.owner_id == user_id
+        models.PageAnalysis.id == analysis_id
+    ).filter(
+        (models.PageAnalysis.owner_id == user_id) | 
+        (models.PageAnalysis.seller_id == user_id)
     ).first()
     
     if not analysis:

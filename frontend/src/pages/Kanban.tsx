@@ -75,7 +75,7 @@ export function Kanban() {
       const role = localStorage.getItem('role')
       
       // Se for vendedor, carrega apenas seus cards
-      const endpoint = role === 'seller' ? '/kanban/my-pipeline' : '/kanban/pipeline'
+      const endpoint = (role === 'seller' || role === 'user') ? '/kanban/my-pipeline' : '/kanban/pipeline'
       
       const { data } = await axios.get<PipelineData>(`${API}${endpoint}`, {
         headers: { Authorization: `Bearer ${token}` },

@@ -43,6 +43,7 @@ export function KanbanModal({ card, onClose, onUpdate }: KanbanModalProps) {
 
   useEffect(() => {
     console.log('🚀 Inicializando modal para card:', card.id)
+    console.log('📊 Estado inicial:', { selectedSeller, sellers: sellers.length })
     loadDetails()
     loadSellers()
   }, [card.id])
@@ -71,15 +72,17 @@ export function KanbanModal({ card, onClose, onUpdate }: KanbanModalProps) {
     try {
       setLoadingSellers(true)
       const token = localStorage.getItem('token')
-      console.log('Carregando vendedores...', { token: token ? 'presente' : 'ausente' })
+      console.log('🔄 Carregando vendedores...', { token: token ? 'presente' : 'ausente' })
       const { data } = await axios.get(`${API}/kanban/sellers`, {
         headers: { Authorization: `Bearer ${token}` }
       })
-      console.log('Vendedores carregados:', data)
+      console.log('✅ Vendedores carregados:', data)
+      console.log('📊 Quantidade de vendedores:', data.length)
       setSellers(data)
+      console.log('🎯 Estado sellers atualizado:', data)
     } catch (err) {
-      console.error('Erro ao carregar vendedores:', err)
-      console.error('Detalhes do erro:', err.response?.data)
+      console.error('❌ Erro ao carregar vendedores:', err)
+      console.error('📋 Detalhes do erro:', err.response?.data)
     } finally {
       setLoadingSellers(false)
     }
