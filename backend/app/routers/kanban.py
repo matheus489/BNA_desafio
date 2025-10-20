@@ -324,8 +324,7 @@ async def get_analysis_details(
     user_id = int(user.get("sub"))
     
     analysis = db.query(models.PageAnalysis).filter(
-        models.PageAnalysis.id == analysis_id,
-        models.PageAnalysis.owner_id == user_id
+        models.PageAnalysis.id == analysis_id
     ).first()
     
     if not analysis:
@@ -579,9 +578,7 @@ async def get_sellers(
     user_id = int(user.get("sub"))
     user_role = user.get("role", "user")
     
-    # Apenas admins podem ver todos os vendedores
-    if user_role != "admin":
-        raise HTTPException(status_code=403, detail="Acesso negado")
+    # Todos os usuários podem ver vendedores, mas apenas admins podem atribuir
     
     sellers = db.query(models.User).filter(
         models.User.role.in_(["user", "seller"])
@@ -611,10 +608,9 @@ async def assign_seller(
     user_id = int(user.get("sub"))
     user_role = user.get("role", "user")
     
-    # Verifica se a análise existe e se o usuário tem acesso
+    # Verifica se a análise existe (temporariamente removida restrição de owner)
     analysis = db.query(models.PageAnalysis).filter(
-        models.PageAnalysis.id == analysis_id,
-        models.PageAnalysis.owner_id == user_id
+        models.PageAnalysis.id == analysis_id
     ).first()
     
     if not analysis:

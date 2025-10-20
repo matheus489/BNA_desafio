@@ -42,6 +42,7 @@ export function KanbanModal({ card, onClose, onUpdate }: KanbanModalProps) {
   const [loadingSellers, setLoadingSellers] = useState(false)
 
   useEffect(() => {
+    console.log('🚀 Inicializando modal para card:', card.id)
     loadDetails()
     loadSellers()
   }, [card.id])
@@ -49,13 +50,18 @@ export function KanbanModal({ card, onClose, onUpdate }: KanbanModalProps) {
   async function loadDetails() {
     try {
       const token = localStorage.getItem('token')
+      console.log('🔄 Carregando detalhes da análise:', card.id)
       const { data } = await axios.get(`${API}/kanban/analysis/${card.id}/details`, {
         headers: { Authorization: `Bearer ${token}` }
       })
+      console.log('✅ Detalhes carregados:', data)
+      console.log('👤 Vendedor atual na análise:', data.seller_id)
       setDetails(data)
       setSelectedSeller(data.seller_id || null)
+      console.log('🎯 Vendedor selecionado atualizado para:', data.seller_id)
     } catch (err) {
-      console.error('Erro ao carregar detalhes:', err)
+      console.error('❌ Erro ao carregar detalhes:', err)
+      console.error('📋 Detalhes do erro:', err.response?.data)
     } finally {
       setLoading(false)
     }
@@ -65,12 +71,15 @@ export function KanbanModal({ card, onClose, onUpdate }: KanbanModalProps) {
     try {
       setLoadingSellers(true)
       const token = localStorage.getItem('token')
+      console.log('Carregando vendedores...', { token: token ? 'presente' : 'ausente' })
       const { data } = await axios.get(`${API}/kanban/sellers`, {
         headers: { Authorization: `Bearer ${token}` }
       })
+      console.log('Vendedores carregados:', data)
       setSellers(data)
     } catch (err) {
       console.error('Erro ao carregar vendedores:', err)
+      console.error('Detalhes do erro:', err.response?.data)
     } finally {
       setLoadingSellers(false)
     }
@@ -147,17 +156,28 @@ export function KanbanModal({ card, onClose, onUpdate }: KanbanModalProps) {
 
   async function assignSeller(sellerId: number) {
     try {
+      console.log('🎯 Tentando atribuir vendedor:', { sellerId, cardId: card.id })
       const token = localStorage.getItem('token')
-      await axios.patch(
+      console.log('🔑 Token presente:', token ? 'sim' : 'não')
+      
+      const response = await axios.patch(
         `${API}/kanban/analysis/${card.id}/assign-seller`,
         { seller_id: sellerId },
         { headers: { Authorization: `Bearer ${token}` } }
       )
+      
+      console.log('✅ Resposta da API:', response.data)
+      console.log('🔄 Atualizando selectedSeller para:', sellerId)
       setSelectedSeller(sellerId)
+      console.log('🔄 Chamando loadDetails...')
       await loadDetails()
+      console.log('🔄 Chamando onUpdate...')
       onUpdate()
+      console.log('🎉 Vendedor atribuído com sucesso!')
     } catch (err) {
-      alert('Erro ao atribuir vendedor')
+      console.error('❌ Erro ao atribuir vendedor:', err)
+      console.error('📋 Detalhes do erro:', err.response?.data)
+      alert(`Erro ao atribuir vendedor: ${err.response?.data?.detail || err.message}`)
     }
   }
 
@@ -274,7 +294,11 @@ export function KanbanModal({ card, onClose, onUpdate }: KanbanModalProps) {
                     <div style={sellerInfoStyles}>
                       <span style={sellerLabelStyles}>Vendedor atual:</span>
                       <span style={sellerEmailStyles}>
-                        {sellers.find(s => s.id === selectedSeller)?.email || 'Carregando...'}
+                        {(() => {
+                          const seller = sellers.find(s => s.id === selectedSeller)
+                          console.log('🔍 Procurando vendedor:', { selectedSeller, sellers, found: seller })
+                          return seller?.email || 'Carregando...'
+                        })()}
                       </span>
                       <button
                         style={unassignButtonStyles}
@@ -303,11 +327,14 @@ export function KanbanModal({ card, onClose, onUpdate }: KanbanModalProps) {
                       disabled={loadingSellers}
                     >
                       <option value="">Selecione um vendedor...</option>
-                      {sellers.map(seller => (
-                        <option key={seller.id} value={seller.id}>
-                          {seller.email} ({seller.role})
-                        </option>
-                      ))}
+                      {sellers.map(seller => {
+                        console.log('Renderizando vendedor:', seller)
+                        return (
+                          <option key={seller.id} value={seller.id} style={sellerOptionStyles}>
+                            {seller.email} ({seller.role})
+                          </option>
+                        )
+                      })}
                     </select>
                   </div>
                 </div>
@@ -700,12 +727,19 @@ const sellerEmailStyles: React.CSSProperties = {
 
 const sellerSelectStyles: React.CSSProperties = {
   padding: '0.75rem',
-  background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
+  background: 'rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(255, 255, 255, 0.3)',
   borderRadius: '8px',
-  color: 'white',
+  color: '#000000',
   fontSize: '0.95rem',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  fontWeight: '500'
+}
+
+const sellerOptionStyles: React.CSSProperties = {
+  color: '#000000',
+  backgroundColor: '#ffffff',
+  padding: '0.5rem'
 }
 
 const unassignButtonStyles: React.CSSProperties = {

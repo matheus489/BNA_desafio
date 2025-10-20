@@ -14,7 +14,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     # Relacionamento: um usuário pode ter várias análises
-    analyses = relationship("PageAnalysis", back_populates="owner")
+    analyses = relationship("PageAnalysis", back_populates="owner", foreign_keys="PageAnalysis.owner_id")
     # Relacionamento: um usuário pode ter várias sessões de treinamento
     training_sessions = relationship("TrainingSession", back_populates="user")
 
@@ -37,7 +37,7 @@ class PageAnalysis(Base):
 
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     # Relacionamento com o dono (usuário que solicitou a análise)
-    owner = relationship("User", back_populates="analyses")
+    owner = relationship("User", back_populates="analyses", foreign_keys=[owner_id])
     
     # Vendedor atribuído ao card
     seller_id = Column(Integer, ForeignKey("users.id"), nullable=True)

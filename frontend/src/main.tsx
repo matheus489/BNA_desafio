@@ -10,7 +10,6 @@ import { Admin } from './pages/Admin'
 import { History } from './pages/History'
 import { Dashboard } from './pages/Dashboard'
 import { Kanban } from './pages/Kanban'
-import { Settings } from './pages/Settings'
 import Training from './pages/Training'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -27,7 +26,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/compare" element={<Compare />} />
           <Route path="/history" element={<History />} />
           <Route path="/training" element={<Training />} />
-          <Route path="/settings" element={<Settings />} />
           <Route path="/admin" element={localStorage.getItem('role') === 'admin' ? <Admin /> : <Navigate to="/login" replace />} />
         </Route>
       </Routes>

@@ -319,17 +319,25 @@ function Column({
           {cards.length === 0 ? (
             <div style={emptyStateStyles}>
               <p>Nenhum lead neste estágio</p>
+              <div style={columnDropZoneStyles}>
+                <span>Solte cards aqui</span>
+              </div>
             </div>
           ) : (
-            cards.map((card: Card) => (
-              <CardItem
-                key={card.id}
-                card={card}
-                onClick={() => onCardClick(card)}
-                showSuggestions={showSuggestions === card.id}
-                suggestions={suggestions[card.id]}
-              />
-            ))
+            <>
+              {cards.map((card: Card) => (
+                <CardItem
+                  key={card.id}
+                  card={card}
+                  onClick={() => onCardClick(card)}
+                  showSuggestions={showSuggestions === card.id}
+                  suggestions={suggestions[card.id]}
+                />
+              ))}
+              <div style={columnDropZoneStyles}>
+                <span>+ Solte novos cards aqui</span>
+              </div>
+            </>
           )}
         </SortableContext>
       </div>
@@ -365,8 +373,8 @@ function CardItem({ card, isDragging, onClick, showSuggestions, suggestions }: a
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <div
         style={{
-          ...cardStyles,
-          cursor: isDragging ? 'grabbing' : 'grab',
+          ...(isSortableDragging ? cardDraggingStyles : cardStyles),
+          cursor: isSortableDragging ? 'grabbing' : 'grab',
           transform: isDragging ? 'rotate(3deg)' : 'none',
         }}
         onClick={onClick}
@@ -503,9 +511,14 @@ const autoRefreshIndicatorStyles: React.CSSProperties = {
 
 const boardStyles: React.CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-  gap: '1.5rem',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+  gap: '1rem',
   alignItems: 'flex-start',
+  padding: '0.5rem',
+  minHeight: 'calc(100vh - 200px)',
+  overflowX: 'auto',
+  scrollbarWidth: 'thin',
+  scrollbarColor: 'rgba(255, 255, 255, 0.3) transparent',
 }
 
 const columnStyles: React.CSSProperties = {
@@ -513,9 +526,12 @@ const columnStyles: React.CSSProperties = {
   backdropFilter: 'blur(20px)',
   borderRadius: '16px',
   border: '1px solid rgba(255, 255, 255, 0.1)',
-  minHeight: '600px',
+  minHeight: 'calc(100vh - 250px)',
+  maxHeight: 'calc(100vh - 200px)',
   display: 'flex',
   flexDirection: 'column',
+  transition: 'all 0.2s ease',
+  position: 'relative',
 }
 
 const columnHeaderStyles: React.CSSProperties = {
@@ -550,10 +566,13 @@ const columnCountStyles: React.CSSProperties = {
 }
 
 const columnContentStyles: React.CSSProperties = {
-  padding: '1rem',
+  padding: '0.75rem',
   flex: 1,
   overflowY: 'auto',
   maxHeight: 'calc(100vh - 300px)',
+  minHeight: '200px',
+  scrollbarWidth: 'thin',
+  scrollbarColor: 'rgba(255, 255, 255, 0.3) transparent',
 }
 
 const emptyStateStyles: React.CSSProperties = {
@@ -572,6 +591,36 @@ const cardStyles: React.CSSProperties = {
   marginBottom: '0.75rem',
   transition: 'all 0.2s',
   cursor: 'grab',
+  minHeight: '120px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  position: 'relative',
+  overflow: 'hidden',
+}
+
+const cardDraggingStyles: React.CSSProperties = {
+  ...cardStyles,
+  cursor: 'grabbing',
+  transform: 'rotate(5deg)',
+  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+  border: '2px solid rgba(67, 233, 123, 0.6)',
+  background: 'rgba(67, 233, 123, 0.1)',
+}
+
+const columnDropZoneStyles: React.CSSProperties = {
+  minHeight: '100px',
+  border: '2px dashed rgba(67, 233, 123, 0.4)',
+  borderRadius: '12px',
+  background: 'rgba(67, 233, 123, 0.05)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: 'rgba(67, 233, 123, 0.8)',
+  fontSize: '0.9rem',
+  fontWeight: '500',
+  margin: '0.5rem 0',
+  transition: 'all 0.2s ease',
 }
 
 const cardHeaderRowStyles: React.CSSProperties = {
